@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import toast from "react-hot-toast";
 
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -68,6 +69,7 @@ const MapWithGeolocation = () => {
       // Event listener for user location updates
       map.current.on("geolocate", (event: any) => {
         // toast.info("Getting Location...", { duration: 1000 });
+        toast.loading("Getting Location...", { duration: 1000 });
         const { latitude, longitude } = event.target.getCenter();
         if (lastPositionRef.current) {
           const distance = calculateDistance(
@@ -80,6 +82,9 @@ const MapWithGeolocation = () => {
           // Log the location every 25 meters the user moves
           if (distance >= 25) {
             // toast.info(`New Location: ${latitude}, ${longitude}`, { duration: 1000 });
+            toast.success(`New Location: ${latitude}, ${longitude}`, {
+              duration: 1000,
+            });
             console.log("New Location:", { lat: latitude, lng: longitude });
 
             // Update the distance traveled and the last position
@@ -140,6 +145,9 @@ const MapWithGeolocation = () => {
 
   useEffect(() => {
     // toast.info(`Distance Traveled: ${distanceTraveled.toFixed(2)} meters`, { duration: 1000 });
+    toast.success(`Distance Traveled: ${distanceTraveled.toFixed(2)} meters`, {
+      duration: 1000,
+    });
   }, [distanceTraveled]);
 
   return (
