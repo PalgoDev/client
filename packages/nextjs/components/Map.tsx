@@ -2,51 +2,104 @@ import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const MapboxExample = () => {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
-
-  const userLocation = localStorage.getItem("userLocation") ? JSON.parse(localStorage.getItem("userLocation")!) : null;
+const MapWithGeolocation = () => {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const lastPositionRef = useRef<{ lat: number; lng: number } | null>(null); // Store last position
+  const [distanceTraveled, setDistanceTraveled] = useState(0);
 
   useEffect(() => {
-    mapboxgl.accessToken = "pk.eyJ1IjoiamF5bWFsdmUiLCJhIjoiY200ZDM2bjk5MGdzNzJxcHdqajZrenFqYSJ9.KPPMenZ_kMcRaF3lnV2F3Q";
+    // Function to calculate the distance between two points (Haversine formula)
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+      const R = 6371; // Radius of the Earth in km
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c; // Distance in km
+      return distance * 1000; // Convert to meters
+    };
 
-    const map = (mapRef.current = new mapboxgl.Map({
-      style: "mapbox://styles/mapbox/light-v11",
-      center: [-74.0066, 40.7135],
-      zoom: 15.5,
-      pitch: 45,
-      bearing: -17.6,
-      container: "map",
-      antialias: true,
-    }));
+    // Initialize the map when the component is mounted
+    if (mapRef.current) {
+      mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
+      map.current = new mapboxgl.Map({
+        container: mapRef.current!,
+        style: "mapbox://styles/mapbox/light-v11",
+        zoom: 15.5,
+      });
 
-    console.log(userLocation, "userLocation");
+      map.current.on("load", () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords;
 
-    if (userLocation) {
-      map.setCenter(userLocation);
-    } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          console.log(position, "position");
-          localStorage.setItem(
-            "userLocation",
-            JSON.stringify({
-              lng: position.coords.longitude,
-              lat: position.coords.latitude,
-            }),
+              // Log initial position when map is loaded
+              console.log("Initial Position:", { lat: latitude, lng: longitude });
+
+              // Set the initial map center to the user's position
+              map.current?.setCenter([longitude, latitude]);
+
+              // Add GeolocateControl to track user location
+              const geolocateControl = new mapboxgl.GeolocateControl({
+                positionOptions: {
+                  enableHighAccuracy: true,
+                },
+                trackUserLocation: true,
+                showUserHeading: true,
+              });
+
+              // Add the control to the map
+              map.current?.addControl(geolocateControl);
+
+              // Set the last position reference
+              lastPositionRef.current = { lat: latitude, lng: longitude };
+            },
+            error => {
+              console.error("Error obtaining geolocation:", error);
+            },
           );
-          map.setCenter([position.coords.longitude, position.coords.latitude]);
-        });
-      }
+        }
+      });
+
+      // Event listener for user location updates
+      map.current.on("geolocate", (event: any) => {
+        const { latitude, longitude } = event.target.getCenter();
+        if (lastPositionRef.current) {
+          const distance = calculateDistance(
+            lastPositionRef.current.lat,
+            lastPositionRef.current.lng,
+            latitude,
+            longitude,
+          );
+
+          // Log the location every 50 meters the user moves
+          if (distance >= 50) {
+            console.log("New Location:", { lat: latitude, lng: longitude });
+
+            // Update the distance traveled and the last position
+            setDistanceTraveled(prev => prev + distance);
+            lastPositionRef.current = { lat: latitude, lng: longitude };
+
+            // Add a new marker or custom item on the map at the new location
+            const marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current!); // Add the marker to the map
+
+            // Optionally, add a popup to the marker
+            marker.setPopup(new mapboxgl.Popup().setText(`Location: ${latitude}, ${longitude}`));
+          }
+        }
+      });
     }
 
-    map.on("style.load", () => {
-      const layers = map.getStyle()?.layers;
+    map.current?.on("style.load", () => {
+      const layers = map.current?.getStyle()?.layers;
       if (!layers) return;
       const labelLayerId = layers.find(layer => layer.type === "symbol" && layer.layout?.["text-field"])?.id;
 
-      map.addLayer(
+      map.current?.addLayer(
         {
           id: "add-3d-buildings",
           source: "composite",
@@ -75,20 +128,20 @@ const MapboxExample = () => {
       );
     });
 
-    mapRef.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-        showUserHeading: true,
-      }),
-    );
+    return () => {
+      // Cleanup when the component is unmounted
+      if (map.current) {
+        map.current.remove();
+      }
+    };
+  }, []); // Empty dependency array to prevent infinite loop
 
-    // return () => mapRef.current?.remove();
-  }, []);
-
-  return <div id="map" ref={mapContainerRef} style={{ height: "500px", width: "100%" }}></div>;
+  return (
+    <div>
+      <div ref={mapRef} style={{ width: "100%", height: "500px", position: "relative" }} />
+      <p>Distance Traveled: {distanceTraveled.toFixed(2)} meters</p>
+    </div>
+  );
 };
 
-export default MapboxExample;
+export default MapWithGeolocation;
