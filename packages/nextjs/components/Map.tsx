@@ -1,29 +1,51 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import toast from "react-hot-toast";
 
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const lastPositionRef = useRef<{ lat: number; lng: number } | null>(null); // Store last position
+  const markerRef = useRef<mapboxgl.Marker | null>(null); // Single marker reference
+  const lastPositionRef = useRef<{ lat: number; lng: number } | null>(null);
   const [distanceTraveled, setDistanceTraveled] = useState(0);
+  const [simulatedPosition, setSimulatedPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [joystickOffset, setJoystickOffset] = useState({ x: 0, y: 0 }); // For joystick animation
+
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in km
+    return distance * 1000; // Convert to meters
+  };
+
+  const calculateNewPosition = (lat: number, lng: number, distance: number, angle: number) => {
+    const R = 6378137; // Earth's radius in meters
+    const dLat = (distance * Math.cos(angle)) / R;
+    const dLng = (distance * Math.sin(angle)) / (R * Math.cos((lat * Math.PI) / 180));
+
+    const newLat = lat + (dLat * 180) / Math.PI;
+    const newLng = lng + (dLng * 180) / Math.PI;
+
+    return { lat: newLat, lng: newLng };
+  };
+
+  const handleJoystickMove = (distance: number, angle: number) => {
+    if (lastPositionRef.current) {
+      const { lat, lng } = lastPositionRef.current;
+      const newPosition = calculateNewPosition(lat, lng, distance, angle);
+      setSimulatedPosition(newPosition);
+
+      const traveled = calculateDistance(lat, lng, newPosition.lat, newPosition.lng);
+      setDistanceTraveled(prev => prev + traveled);
+    }
+  };
 
   useEffect(() => {
-    // Function to calculate the distance between two points (Haversine formula)
-    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-      const R = 6371; // Radius of the Earth in km
-      const dLat = (lat2 - lat1) * (Math.PI / 180);
-      const dLon = (lon2 - lon1) * (Math.PI / 180);
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = R * c; // Distance in km
-      return distance * 1000; // Convert to meters
-    };
-
-    // Initialize the map when the component is mounted
     if (mapRef.current) {
       mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
       map.current = new mapboxgl.Map({
@@ -38,25 +60,11 @@ const MapWithGeolocation = () => {
             position => {
               const { latitude, longitude } = position.coords;
 
-              // Log initial position when map is loaded
-              console.log("Initial Position:", { lat: latitude, lng: longitude });
-
-              // Set the initial map center to the user's position
               map.current?.setCenter([longitude, latitude]);
 
-              // Add GeolocateControl to track user location
-              const geolocateControl = new mapboxgl.GeolocateControl({
-                positionOptions: {
-                  enableHighAccuracy: true,
-                },
-                trackUserLocation: true,
-                showUserHeading: true,
-              });
+              const marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current!);
+              markerRef.current = marker;
 
-              // Add the control to the map
-              map.current?.addControl(geolocateControl);
-
-              // Set the last position reference
               lastPositionRef.current = { lat: latitude, lng: longitude };
             },
             error => {
@@ -65,95 +73,103 @@ const MapWithGeolocation = () => {
           );
         }
       });
-
-      // Event listener for user location updates
-      map.current.on("geolocate", (event: any) => {
-        // toast.info("Getting Location...", { duration: 1000 });
-        toast.loading("Getting Location...", { duration: 1000 });
-        const { latitude, longitude } = event.target.getCenter();
-        if (lastPositionRef.current) {
-          const distance = calculateDistance(
-            lastPositionRef.current.lat,
-            lastPositionRef.current.lng,
-            latitude,
-            longitude,
-          );
-
-          // Log the location every 25 meters the user moves
-          if (distance >= 25) {
-            // toast.info(`New Location: ${latitude}, ${longitude}`, { duration: 1000 });
-            toast.success(`New Location: ${latitude}, ${longitude}`, {
-              duration: 1000,
-            });
-            console.log("New Location:", { lat: latitude, lng: longitude });
-
-            // Update the distance traveled and the last position
-            setDistanceTraveled(prev => prev + distance);
-            lastPositionRef.current = { lat: latitude, lng: longitude };
-
-            // Add a new marker or custom item on the map at the new location
-            const marker = new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current!); // Add the marker to the map
-
-            // Optionally, add a popup to the marker
-            marker.setPopup(new mapboxgl.Popup().setText(`Location: ${latitude}, ${longitude}`));
-          }
-        }
-      });
     }
 
-    map.current?.on("style.load", () => {
-      const layers = map.current?.getStyle()?.layers;
-      if (!layers) return;
-      const labelLayerId = layers.find(layer => layer.type === "symbol" && layer.layout?.["text-field"])?.id;
-
-      map.current?.addLayer(
-        {
-          id: "add-3d-buildings",
-          source: "composite",
-          "source-layer": "building",
-          filter: ["==", "extrude", "true"],
-          type: "fill-extrusion",
-          minzoom: 15,
-          paint: {
-            "fill-extrusion-color": [
-              "interpolate",
-              ["linear"],
-              ["get", "height"],
-              0,
-              "#FFD700",
-              50,
-              "#FF8C00",
-              100,
-              "#FF4500",
-            ],
-            "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "height"]],
-            "fill-extrusion-base": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "min_height"]],
-            "fill-extrusion-opacity": 0.8,
-          },
-        },
-        labelLayerId,
-      );
-    });
-
     return () => {
-      // Cleanup when the component is unmounted
       if (map.current) {
         map.current.remove();
       }
     };
-  }, []); // Empty dependency array to prevent infinite loop
+  }, []);
 
   useEffect(() => {
-    // toast.info(`Distance Traveled: ${distanceTraveled.toFixed(2)} meters`, { duration: 1000 });
-    toast.success(`Distance Traveled: ${distanceTraveled.toFixed(2)} meters`, {
-      duration: 1000,
-    });
-  }, [distanceTraveled]);
+    if (simulatedPosition && lastPositionRef.current && map.current) {
+      const { lat, lng } = simulatedPosition;
+
+      // Update marker position
+      if (markerRef.current) {
+        markerRef.current.setLngLat([lng, lat]);
+      }
+
+      // Update Mapbox's blue location pointer
+      map.current.setCenter([lng, lat]);
+
+      // Update last known position reference
+      lastPositionRef.current = { lat, lng };
+    }
+  }, [simulatedPosition]);
+
+  const Joystick = () => {
+    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      const joystick = e.currentTarget.getBoundingClientRect();
+      const centerX = joystick.left + joystick.width / 2;
+      const centerY = joystick.top + joystick.height / 2;
+
+      const onMouseMove = (event: MouseEvent) => {
+        const dx = event.clientX - centerX;
+        const dy = event.clientY - centerY;
+
+        const distance = Math.min(0.1, Math.sqrt(dx * dx + dy * dy)); // Simulate up to 25 meters
+        const angle = Math.atan2(dy, dx);
+
+        // Update joystick offset for animation
+        setJoystickOffset({
+          x: Math.min(40, Math.max(-40, dx)),
+          y: Math.min(40, Math.max(-40, dy)),
+        });
+
+        handleJoystickMove(distance, angle);
+      };
+
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+
+        // Reset joystick offset
+        setJoystickOffset({ x: 0, y: 0 });
+      };
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    };
+
+    return (
+      <div
+        style={{
+          width: "100px",
+          height: "100px",
+          background: "rgba(0, 0, 0, 0.1)",
+          borderRadius: "50%",
+          position: "absolute",
+          bottom: "20px",
+          left: "20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 10,
+          cursor: "grab",
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        <div
+          style={{
+            width: "50px",
+            height: "50px",
+            background: "rgba(0, 0, 0, 0.3)",
+            borderRadius: "50%",
+            transform: `translate(${joystickOffset.x}px, ${joystickOffset.y}px)`,
+            transition: joystickOffset.x === 0 && joystickOffset.y === 0 ? "transform 0.2s ease" : "none",
+          }}
+        ></div>
+      </div>
+    );
+  };
 
   return (
     <div>
       <div ref={mapRef} style={{ width: "100%", height: "500px", position: "relative" }} />
       <p>Distance Traveled: {distanceTraveled.toFixed(2)} meters</p>
+      <Joystick />
     </div>
   );
 };
