@@ -27,5 +27,9 @@
   },
   "engines": {
     "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@types/mapbox-gl": "^3.4.1",
+    "mapbox-gl": "^3.8.0"
   }
 }
