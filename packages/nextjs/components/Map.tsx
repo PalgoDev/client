@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const MapboxExample = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+
+  const userLocation = localStorage.getItem("userLocation") ? JSON.parse(localStorage.getItem("userLocation")!) : null;
 
   useEffect(() => {
     mapboxgl.accessToken = "pk.eyJ1IjoiamF5bWFsdmUiLCJhIjoiY200ZDM2bjk5MGdzNzJxcHdqajZrenFqYSJ9.KPPMenZ_kMcRaF3lnV2F3Q";
@@ -18,6 +20,26 @@ const MapboxExample = () => {
       container: "map",
       antialias: true,
     }));
+
+    console.log(userLocation, "userLocation");
+
+    if (userLocation) {
+      map.setCenter(userLocation);
+    } else {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log(position, "position");
+          localStorage.setItem(
+            "userLocation",
+            JSON.stringify({
+              lng: position.coords.longitude,
+              lat: position.coords.latitude,
+            }),
+          );
+          map.setCenter([position.coords.longitude, position.coords.latitude]);
+        });
+      }
+    }
 
     map.on("style.load", () => {
       const layers = map.getStyle()?.layers;
@@ -38,11 +60,11 @@ const MapboxExample = () => {
               ["linear"],
               ["get", "height"],
               0,
-              "#FFD700", // Gold for smaller buildings
+              "#FFD700",
               50,
-              "#FF8C00", // Dark orange for medium buildings
+              "#FF8C00",
               100,
-              "#FF4500", // Red for taller buildings
+              "#FF4500",
             ],
             "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "height"]],
             "fill-extrusion-base": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "min_height"]],
@@ -52,6 +74,16 @@ const MapboxExample = () => {
         labelLayerId,
       );
     });
+
+    mapRef.current.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserHeading: true,
+      }),
+    );
 
     // return () => mapRef.current?.remove();
   }, []);
