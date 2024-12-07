@@ -67,9 +67,9 @@ export const Header = () => {
     useCallback(() => setIsDrawerOpen(false), []),
   );
 
-  const okto = useOkto();
+  const okto = useOkto() as OktoContextType;
 
-  const isSignedIn = okto?.isLoggedIn;
+  const isSignedIn = okto?.isLoggedIn ?? false;
 
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
@@ -113,7 +113,6 @@ export const Header = () => {
         {isSignedIn ? (
           <button
             onClick={() => {
-              localStorage.removeItem("okto_user_id");
               okto?.logOut();
               googleLogout();
             }}

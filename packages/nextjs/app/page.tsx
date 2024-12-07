@@ -10,9 +10,7 @@ import Map from "~~/components/Map";
 const Home: NextPage = () => {
   return (
     <>
-      <OktoProvider apiKey={process.env.NEXT_PUBLIC_OKTO_CLIENT_API_KEY as string} buildType={BuildType.SANDBOX}>
-        <Map />
-      </OktoProvider>
+      <Map />
     </>
   );
 };

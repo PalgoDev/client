@@ -5,6 +5,8 @@ import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowki
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
+import { BuildType } from "okto-sdk-react";
+import { OktoProvider } from "okto-sdk-react";
 import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
 import { Footer } from "~~/components/Footer";
@@ -19,9 +21,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className={`flex flex-col min-h-screen `}>
-        <Header />
-        <main className="relative flex flex-col flex-1">{children}</main>
-        {/* <Footer /> */}
+        <OktoProvider apiKey={process.env.NEXT_PUBLIC_OKTO_CLIENT_API_KEY as string} buildType={BuildType.SANDBOX}>
+          <Header />
+          <main className="relative flex flex-col flex-1">{children}</main>
+          {/* <Footer /> */}
+        </OktoProvider>
       </div>
       <Toaster />
     </>
