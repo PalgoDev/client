@@ -2,67 +2,50 @@
 module.exports = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./utils/**/*.{js,ts,jsx,tsx}"],
   plugins: [require("daisyui")],
-  darkTheme: "dark",
-  darkMode: ["selector", "[data-theme='dark']"],
+  darkTheme: "light",
+  darkMode: false, // Disable separate dark mode
   daisyui: {
     themes: [
       {
         light: {
-          primary: "#0D1B2A",
-          "primary-content": "#E0E1DD",
-          secondary: "#1B263B",
-          "secondary-content": "#E0E1DD",
-          accent: "#415A77",
-          "accent-content": "#E0E1DD",
-          neutral: "#778DA9",
-          "neutral-content": "#0D1B2A",
-          "base-100": "#E0E1DD",
-          "base-200": "#F4F4F4",
-          "base-300": "#C5C6C7",
-          "base-content": "#0D1B2A",
-          info: "#00A8E8",
-          success: "#34EEB6",
-          warning: "#FFCF72",
-          error: "#FF8863",
+          primary: "#0d1b2a",
+          "primary-content": "#e0e1dd",
+          secondary: "#243b5e", // Slightly lighter than primary
+          "secondary-content": "#e0e1dd",
+          accent: "#657f9d", // Muted accent
+          "accent-content": "#e0e1dd",
+          neutral: "#778da9", // Neutral tone
+          "neutral-content": "#0d1b2a",
+          "base-100": "#e0e1dd", // Background color
+          "base-200": "#f4f4f4", // Slightly lighter
+          "base-300": "#c5c6c7", // Muted
+          "base-content": "#0d1b2a", // Foreground color
+          info: "#00a8e8", // Information
+          success: "#34eeb6", // Success
+          warning: "#ffcf72", // Warning
+          error: "#ff8863", // Error
           "--rounded-btn": "9999rem",
-          ".tooltip": { "--tooltip-tail": "6px" },
-          ".link": { textUnderlineOffset: "2px" },
-          ".link:hover": { opacity: "80%" },
-        },
-      },
-      {
-        dark: {
-          primary: "#E0E1DD",
-          "primary-content": "#0D1B2A",
-          secondary: "#778DA9",
-          "secondary-content": "#0D1B2A",
-          accent: "#415A77",
-          "accent-content": "#0D1B2A",
-          neutral: "#1B263B",
-          "neutral-content": "#E0E1DD",
-          "base-100": "#0D1B2A",
-          "base-200": "#1B263B",
-          "base-300": "#415A77",
-          "base-content": "#E0E1DD",
-          info: "#00A8E8",
-          success: "#34EEB6",
-          warning: "#FFCF72",
-          error: "#FF8863",
-          "--rounded-btn": "9999rem",
-          ".tooltip": { "--tooltip-tail": "6px", "--tooltip-color": "oklch(var(--p))" },
-          ".link": { textUnderlineOffset: "2px" },
-          ".link:hover": { opacity: "80%" },
         },
       },
     ],
   },
   theme: {
     extend: {
-      boxShadow: { center: "0 0 12px -2px rgb(0 0 0 / 0.05)" },
-      animation: { "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite" },
       colors: {
-        background: "#E0E1DD",
-        foreground: "#0D1B2A",
+        background: "#e0e1dd",
+        foreground: "#0d1b2a",
+        primary: "#0d1b2a",
+        secondary: "#243b5e",
+        muted: "#778da9",
+        accent: "#657f9d",
+        border: "#c5c6c7",
+        input: "#c5c6c7",
+      },
+      boxShadow: {
+        center: "0 0 12px -2px rgb(0 0 0 / 0.05)",
+      },
+      animation: {
+        "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
