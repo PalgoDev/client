@@ -188,6 +188,7 @@ p {
   position: absolute;
   top: 0;
   animation: 0.2s damageText 0.5s ease-in-out infinite;
+  text-shadow: -1px -1px 0 #faa, 1px -1px 0 #faa, -1px 1px 0 #faa, 1px 1px 0 #faa;
   @apply text-white text-4xl italic font-semibold;
 }
 

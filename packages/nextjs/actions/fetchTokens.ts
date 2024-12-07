@@ -5,13 +5,14 @@ interface FetchTokensRequest {
   lat: number;
 }
 
-const LIMIT = 1000;
+const LIMIT = 200;
 
 export const fetchTokens = async (request: FetchTokensRequest) => {
   console.log(request, "request to fetch tokens");
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/entity/?longitude=${request.long}&latitude=${request.lat}&limit=${LIMIT}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/entity/individually?longitude=${request.long}&latitude=${request.lat}&limit=${LIMIT}`,
+      
     );
     const res = await response.json();
     // console.log(res, "response");
