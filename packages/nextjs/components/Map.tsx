@@ -276,13 +276,13 @@ const MapWithGeolocation = () => {
   };
 
   // Testing button
-  const setOverlay = useSetAtom(overlayAtom);
+  // const setOverlay = useSetAtom(overlayAtom);
 
   return (
     <div className="flex flex-col h-90vh justify-start items-center">
       <MapRenderer mapRef={mapRef} />
 
-      <button
+      {/* <button
         onClick={() =>
           setOverlay({
             type: OVERLAY.FIGHT,
@@ -291,7 +291,7 @@ const MapWithGeolocation = () => {
         }
       >
         Start a Fight (Simulated)
-      </button>
+      </button> */}
 
       <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
         <Joystick />
