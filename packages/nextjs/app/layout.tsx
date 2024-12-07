@@ -1,5 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getServerSession } from "next-auth";
 import { Session } from "next-auth";
 import { Toaster } from "react-hot-toast";

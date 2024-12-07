@@ -10,13 +10,36 @@ export const Fighting = () => {
   const [damage0, setDamage0] = useState(0);
   const [damage1, setDamage1] = useState(0);
 
-  const sampleDamageList = [18, 24, 22, 16, 12, 14, 34, 56, 32, 45, 12, 12, 2, 5, 5, 8, 18, 30, 46, 48, 50];
-  const result = FIGHT_STEP.WIN;
+  const fetchFight = async () => {
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/game/createAndSimulate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          player_1_id: 4,
+          player_2_id: 3,
+        }),
+      }).then(res => res.json())
+  }
+
+  const [fightData, setFightData] = useState<{damages: number[], result: number} | null>(null);
+
+  const damageList = fightData?.damages || [];
+  const result = fightData?.result === 1 ? FIGHT_STEP.WIN : FIGHT_STEP.LOSE;
 
   useEffect(() => {
+    fetchFight().then(data => {
+      setFightData(data);
+    });
+  } , []);
+
+  useEffect(() => {
+    if (!fightData) return;
+
     let interval = setInterval(() => {
-      setDamage0(sampleDamageList[Math.floor(Math.random() * sampleDamageList.length)]);
-      setDamage1(sampleDamageList[Math.floor(Math.random() * sampleDamageList.length)]);
+      setDamage0(damageList[Math.floor(Math.random() * damageList.length)]);
+      setDamage1(damageList[Math.floor(Math.random() * damageList.length)]);
     }, 1000);
 
     let timeout = setTimeout(() => {
@@ -27,7 +50,7 @@ export const Fighting = () => {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, []);
+  }, [fightData, setStep, damageList, result]);
 
   return (
     <>
@@ -48,7 +71,7 @@ export const Fighting = () => {
             height="100%"
             className="z-10 rounded-full hit-animation-1"
           />
-          <p className="damage-text">-{damage0}</p>
+          {damage0 && <p className="damage-text">-{damage0}</p>}
         </div>
         <img
           src={IMAGE_URL.electricity}
@@ -64,7 +87,8 @@ export const Fighting = () => {
             height="100%"
             className="z-10 rounded-full hit-animation-2"
           />
-          <p className="damage-text">-{damage1}</p>
+
+          {damage1 && <p className="damage-text">-{damage1}</p>}
         </div>
       </div>
     </>
