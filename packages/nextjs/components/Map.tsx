@@ -62,7 +62,7 @@ const MapWithGeolocation = () => {
 
         map.current?.addLayer(
           {
-            id: "add-3d-buildings",
+            id: "add-3d-buildings-" + Math.random(),
             source: "composite",
             "source-layer": "building",
             filter: ["==", "extrude", "true"],
