@@ -9,10 +9,10 @@ export const fetchTokens = async (request: FetchTokensRequest) => {
   console.log(request, "request to fetch tokens");
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/entity/?longitude=${request.long}&latitude=${request.lat}&limit=100`,
+      `${process.env.NEXT_PUBLIC_API_URL}/entity/?longitude=${request.long}&latitude=${request.lat}&limit=5000`,
     );
     const res = await response.json();
-    console.log(res, "response");
+    // console.log(res, "response");
     return res;
   } catch (error) {
     console.error(error, "error from fetching tokens");

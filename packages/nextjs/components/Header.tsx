@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import GoogleSignIn from "./GoogleSignIn";
+import { LoginButton } from "./GoogleSignIn";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { useSession } from "next-auth/react";
 import { type OktoContextType, type User, useOkto } from "okto-sdk-react";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
@@ -71,6 +72,12 @@ export const Header = () => {
 
   const isSignedIn = okto?.isLoggedIn ?? false;
 
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(session, "session");
+  }, [session]);
+
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
@@ -120,7 +127,7 @@ export const Header = () => {
             Logout
           </button>
         ) : (
-          <GoogleSignIn />
+          <LoginButton />
         )}
       </div>
     </div>
