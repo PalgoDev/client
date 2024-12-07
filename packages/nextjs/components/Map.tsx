@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { fetchTokens } from "~~/actions/fetchTokens";
+import { useMarkers } from "~~/hooks/useMarkers";
 
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,6 @@ const MapWithGeolocation = () => {
       mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
       map.current = new mapboxgl.Map({
         container: mapRef.current!,
-        style: "mapbox://styles/mapbox/light-v11",
         zoom: zoomLevel,
       });
 
@@ -161,37 +161,7 @@ const MapWithGeolocation = () => {
     }
   };
 
-  useEffect(() => {
-    itemCoords.forEach(item => {
-      // Create a custom marker element
-      const markerDiv = document.createElement("div");
-      markerDiv.innerHTML = `
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="red"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      `;
-      markerDiv.style.cursor = "pointer";
-
-      // Add a click event listener to the marker element
-      markerDiv.addEventListener("click", () => {
-        console.log(`Marker clicked for item: ${item.long} ${item.lat}`);
-        alert(`Marker clicked for item: ${item.long} ${item.lat}`);
-      });
-
-      // Create and add the marker to the map
-      new mapboxgl.Marker({
-        element: markerDiv,
-      })
-        .setLngLat([item.long, item.lat])
-        .addTo(map.current!);
-    });
-  }, [itemCoords]);
+  useMarkers({ map, itemCoords });
 
   const ZoomControls = () => {
     const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 1)); // Max zoom level is 22
@@ -304,6 +274,7 @@ const MapWithGeolocation = () => {
   return (
     <div className="flex flex-col h-90vh justify-start items-center">
       <div ref={mapRef} style={{ width: "90%", height: "70vh", borderRadius: "10px", marginBottom: "10px" }} />
+
       <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
         <Joystick />
         <ZoomControls />

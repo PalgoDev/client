@@ -72,7 +72,7 @@ export const Header = () => {
   const isSignedIn = okto?.isLoggedIn ?? false;
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
+    <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label

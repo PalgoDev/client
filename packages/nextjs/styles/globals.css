@@ -59,6 +59,7 @@ p {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -89,8 +90,8 @@ p {
 
 @layer base {
 
-  
+
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
