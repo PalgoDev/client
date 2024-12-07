@@ -7,9 +7,10 @@ import { usePathname } from "next/navigation";
 import { LoginButton } from "./GoogleSignIn";
 import { PlayerChip, PlayerStats } from "./PlayerStats";
 import { jwtDecode } from "jwt-decode";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { type OktoContextType, useOkto } from "okto-sdk-react";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
+import { Bars3Icon, BugAntIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { createUser } from "~~/actions/createUser";
 import { fetchUser } from "~~/actions/fetchUser";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
@@ -107,6 +108,17 @@ export const Header = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      await signOut();
+      toast.success("Logged out successfully");
+      setUserAddress(null);
+    } catch (err) {
+      toast.error("Error logging out");
+    }
+  };
+
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
@@ -154,6 +166,13 @@ export const Header = () => {
         ) : (
           <LoginButton />
         )}
+        <PowerIcon
+          className="h-5 w-5 ml-4 cursor-pointer "
+          color="red"
+          onClick={() => {
+            handleLogout();
+          }}
+        />
       </div>
     </div>
   );
