@@ -173,7 +173,7 @@ const MapWithGeolocation = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row-reverse",
           gap: "10px",
         }}
       >
