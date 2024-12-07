@@ -33,6 +33,7 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
       });
 
       notification.success("Claimed ORB!");
+      onDismiss();
     } catch (e) {
       console.error("Error while claiming ORB", e);
       notification.error("Error while claiming ORB");
