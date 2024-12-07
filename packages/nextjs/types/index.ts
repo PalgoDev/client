@@ -1,9 +1,7 @@
 export enum OVERLAY {
-  // FIGHT = 2,
-  FIGHT = 0,
+  CLAIM_ORB = 0,
   HEAL = 1,
-  // CLAIM_ORB = 0,
-  CLAIM_ORB = 2,
+  FIGHT = 2,
   NONE,
 }
 

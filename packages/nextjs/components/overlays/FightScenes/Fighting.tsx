@@ -11,7 +11,7 @@ export const Fighting = () => {
   const [damage1, setDamage1] = useState(0);
 
   const sampleDamageList = [18, 24, 22, 16, 12, 14, 34, 56, 32, 45, 12, 12, 2, 5, 5, 8, 18, 30, 46, 48, 50];
-  const result = FIGHT_STEP.LOSE;
+  const result = FIGHT_STEP.WIN;
 
   useEffect(() => {
     let interval = setInterval(() => {

@@ -282,17 +282,6 @@ const MapWithGeolocation = () => {
     <div className="flex flex-col h-90vh justify-start items-center">
       <MapRenderer mapRef={mapRef} />
 
-      <button
-        onClick={() =>
-          setOverlay({
-            type: OVERLAY.FIGHT,
-            data: { long: lastPositionRef.current?.lng!, lat: lastPositionRef.current?.lat! },
-          })
-        }
-      >
-        Start a Fight
-      </button>
-
       <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
         <Joystick />
         <ZoomControls />
