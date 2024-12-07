@@ -41,9 +41,6 @@ export const Versus = () => {
           className="absolute right-0 md:right-1/4 slide-from-right z-10 rounded-full"
         />
       </div>
-      <button onClick={() => setStep(FIGHT_STEP.LOBBY)} className="absolute z-30">
-        Back
-      </button>
     </>
   );
 };

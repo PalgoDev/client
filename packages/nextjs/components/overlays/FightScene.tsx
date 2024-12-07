@@ -4,6 +4,8 @@ import { IMAGE_URL } from "~~/config";
 import { fightStepAtom } from "~~/state/fightAtom";
 import { FIGHT_STEP } from "~~/types";
 import { Fighting } from "./FightScenes/Fighting";
+import { Win } from "./FightScenes/Win";
+import { Lose } from "./FightScenes/Lose";
 
 interface FightSceneProps {
   data: {
@@ -25,6 +27,14 @@ export const FightScene = ({ data, onDismiss }: FightSceneProps) => {
 
   if (step === FIGHT_STEP.FIGHTING) {
     return <Fighting />;
+  }
+
+  if(step === FIGHT_STEP.WIN){
+    return <Win />
+  }
+
+  if(step === FIGHT_STEP.LOSE){
+    return <Lose />
   }
 
   return (
