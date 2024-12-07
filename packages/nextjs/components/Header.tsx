@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LoginButton } from "./GoogleSignIn";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import { useSession } from "next-auth/react";
 import { type OktoContextType, type User, useOkto } from "okto-sdk-react";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
@@ -107,10 +108,15 @@ export const Header = () => {
     if (!idToken) {
       return;
     }
+    const userId = jwtDecode(idToken).sub;
+    if (!userId) {
+      return;
+    }
     return new Promise(resolve => {
       authenticate(idToken, (result: any, error: any) => {
         if (result) {
-          console.log("Authentication successful", result);
+          console.log("Authentication successful", result)
+          handleCreateWallet();
           resolve({ result: true });
         } else if (error) {
           console.error("Authentication error:", error);
@@ -190,7 +196,6 @@ export const Header = () => {
         </ul> */}
       </div>
       <div className="navbar-end flex-grow mr-4 px-10">
-        <button onClick={handleCreateWallet}>Create Wallet</button>
         <LoginButton />
       </div>
     </div>
