@@ -55,6 +55,40 @@ const MapWithGeolocation = () => {
         zoom: zoomLevel,
       });
 
+      map.current?.on("style.load", () => {
+        const layers = map.current?.getStyle()?.layers;
+        if (!layers) return;
+        const labelLayerId = layers.find(layer => layer.type === "symbol" && layer.layout?.["text-field"])?.id;
+
+        map.current?.addLayer(
+          {
+            id: "add-3d-buildings",
+            source: "composite",
+            "source-layer": "building",
+            filter: ["==", "extrude", "true"],
+            type: "fill-extrusion",
+            minzoom: 15,
+            paint: {
+              "fill-extrusion-color": [
+                "interpolate",
+                ["linear"],
+                ["get", "height"],
+                0,
+                "#FFD700", // Gold for smaller buildings
+                50,
+                "#FF8C00", // Dark orange for medium buildings
+                100,
+                "#FF4500", // Red for taller buildings
+              ],
+              "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "height"]],
+              "fill-extrusion-base": ["interpolate", ["linear"], ["zoom"], 15, 0, 15.05, ["get", "min_height"]],
+              "fill-extrusion-opacity": 0.8,
+            },
+          },
+          labelLayerId,
+        );
+      });
+
       map.current.on("load", () => {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -163,7 +197,7 @@ const MapWithGeolocation = () => {
         const dx = event.clientX - centerX;
         const dy = event.clientY - centerY;
 
-        const distance = Math.min(0.1, Math.sqrt(dx * dx + dy * dy)); // Simulate up to 25 meters
+        const distance = Math.min(0.1, Math.sqrt(dx * dx + dy * dy));
         const angle = Math.atan2(dy, dx);
 
         // Update joystick offset for animation
