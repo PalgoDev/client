@@ -24,8 +24,9 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
           </h3>
         </div>
 
-        <div className="mt-10 grid place-items-center">
+        <div className="mt-10 flex justify-center space-x-2">
           <button className="font-bold bg-purple-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>Claim</button>
+          <button className="font-bold bg-gray-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>Cancel</button>
         </div>
       </div>
     </>
