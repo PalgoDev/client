@@ -76,7 +76,7 @@ export const PlayerChip: React.FC<PlayerStats> = ({ wallet_address, attack, defe
         </div>
       </dialog>
 
-      <StoreModal wallet_address={wallet_address} />
+      <StoreModal />
     </>
   );
 };
