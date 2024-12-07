@@ -8,7 +8,7 @@ interface ClaimOrbProps {
 export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
   return (
     <>
-      <div className="w-1/2 h-1/2 rounded-xl bg-white">
+      <div className="w-[95%] md:w-1/2 h-1/2 rounded-xl bg-white bg-opacity-80 backdrop-blur-md transition-all">
         <div className="flex justify-center -mt-16">
           <img
             src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHNhcHNkaXU0bThkenptcTIyMHc4bWc3NzlvYWg2ZHB0ZDd5a210aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ODaa2WYdTZ3sTrXNAT/giphy.webp"

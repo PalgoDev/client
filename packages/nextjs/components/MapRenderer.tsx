@@ -57,8 +57,8 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
         />
 
         {isOverlayOpen && (
-          <div className="absolute top-0 left-0 w-full h-full z-10 fade-in grid place-items-center">
-            <div className="w-full h-full xl:w-3/4 grid place-items-center">{renderOverlay()}</div>
+          <div className="absolute top-0 left-0 w-full h-full z-10 grid place-items-center">
+            <div className="w-full h-full xl:w-3/4 grid place-items-center fade-in transition-all">{renderOverlay()}</div>
           </div>
         )}
       </div>
