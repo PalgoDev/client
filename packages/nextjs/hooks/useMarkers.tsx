@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
-import { fetchTokens } from "~~/actions/fetchTokens";
+
+const getDefaultMarker = () => {
+  const imageUrl = "https://i.giphy.com/qJzZ4APiDZQuJDY7vh.webp";
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.width = 36;
+  img.height = 36;
+  img.style.borderRadius = "50%";
+  return img;
+};
 
 interface UseMarkerProps {
   map: ReturnType<typeof useRef<mapboxgl.Map | null>>;
@@ -13,29 +22,19 @@ export const useMarkers = ({ map, itemCoords }: UseMarkerProps) => {
   useEffect(() => {
     itemCoords.forEach(item => {
       // Create a custom marker element
-      const markerDiv = document.createElement("div");
-      markerDiv.innerHTML = `
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="red"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      `;
-      markerDiv.style.cursor = "pointer";
+      const markerElement = getDefaultMarker();
+
+      markerElement.style.cursor = "pointer";
 
       // Add a click event listener to the marker element
-      markerDiv.addEventListener("click", () => {
+      markerElement.addEventListener("click", () => {
         console.log(`Marker clicked for item: ${item.long} ${item.lat}`);
         alert(`Marker clicked for item: ${item.long} ${item.lat}`);
       });
 
       // Create and add the marker to the map
       new mapboxgl.Marker({
-        element: markerDiv,
+        element: markerElement,
       })
         .setLngLat([item.long, item.lat])
         .addTo(map.current!);
