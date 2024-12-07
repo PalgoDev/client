@@ -20,7 +20,7 @@ const ScaffoldEthApp = async ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
-          <ThemeProvider enableSystem>
+          <ThemeProvider defaultTheme="light">
             <ScaffoldEthAppWithProviders session={session ?? ({} as Session)}>{children}</ScaffoldEthAppWithProviders>
             <Toaster />
           </ThemeProvider>

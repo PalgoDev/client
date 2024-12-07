@@ -73,6 +73,7 @@ export const Header = () => {
 
   const {
     isLoggedIn,
+
     authenticate,
     authenticateWithUserId,
     logOut,
@@ -115,8 +116,8 @@ export const Header = () => {
     return new Promise(resolve => {
       authenticate(idToken, (result: any, error: any) => {
         if (result) {
-          console.log("Authentication successful", result)
-          handleCreateWallet();
+          console.log("Authentication successful", result);
+
           resolve({ result: true });
         } else if (error) {
           console.error("Authentication error:", error);
@@ -150,6 +151,7 @@ export const Header = () => {
 
   const handleCreateWallet = async () => {
     try {
+      console.log("creating wallet");
       const res = await createWallet();
       console.log("create wallet res", res);
     } catch (err) {
@@ -196,6 +198,12 @@ export const Header = () => {
         </ul> */}
       </div>
       <div className="navbar-end flex-grow mr-4 px-10">
+        <button
+          onClick={handleCreateWallet}
+          className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 border-1 rounded px-4 py-2 transition-colors"
+        >
+          Create Wallet
+        </button>
         <LoginButton />
       </div>
     </div>
