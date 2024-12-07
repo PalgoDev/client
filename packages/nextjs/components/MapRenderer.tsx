@@ -27,7 +27,6 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
 
   return (
     <>
-      {JSON.stringify(overlay)}
       <div
         style={{
           width: "90%",
