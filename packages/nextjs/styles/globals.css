@@ -97,7 +97,7 @@ p {
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 @keyframes fadeIn {
@@ -133,7 +133,7 @@ p {
 
 @keyframes scaleUp {
   from {
-    transform: scale(1.1);
+    transform: scale(1.4);
   }
 
   to {
@@ -170,5 +170,19 @@ p {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+.delayed-fade-out {
+  animation: 3s delayedFadeOut 1s ease-in-out forwards;
+}
+
+@keyframes delayedFadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }

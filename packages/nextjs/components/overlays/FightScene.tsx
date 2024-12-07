@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import { IMAGE_URL } from "~~/config";
 import { fightStepAtom } from "~~/state/fightAtom";
 import { FIGHT_STEP } from "~~/types";
+import { Fighting } from "./FightScenes/Fighting";
 
 interface FightSceneProps {
   data: {
@@ -20,6 +21,10 @@ export const FightScene = ({ data, onDismiss }: FightSceneProps) => {
         <Versus />
       </>
     );
+  }
+
+  if (step === FIGHT_STEP.FIGHTING) {
+    return <Fighting />;
   }
 
   return (
