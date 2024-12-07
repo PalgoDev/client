@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { ClaimOrb } from "./overlays/ClaimOrb";
+import { FightScene } from "./overlays/FightScene";
 import { useAtom, useAtomValue } from "jotai";
 import { overlayAtom } from "~~/state/overlayAtom";
 import { OVERLAY } from "~~/types";
@@ -18,6 +19,10 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
 
   const renderOverlay = useCallback(() => {
     switch (overlay.type) {
+      case OVERLAY.FIGHT:
+        return <FightScene data={overlay.data} onDismiss={onDismissOverlay} />;
+      case OVERLAY.HEAL:
+        return <ClaimOrb data={overlay.data} onDismiss={onDismissOverlay} />;
       case OVERLAY.CLAIM_ORB:
         return <ClaimOrb data={overlay.data} onDismiss={onDismissOverlay} />;
       default:
@@ -57,7 +62,9 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
 
         {isOverlayOpen && (
           <div className="absolute top-0 left-0 w-full h-full z-10 grid place-items-center">
-            <div className="w-full h-full xl:w-3/4 grid place-items-center fade-in transition-all">{renderOverlay()}</div>
+            <div className="w-full h-full xl:w-3/4 grid place-items-center fade-in transition-all">
+              {renderOverlay()}
+            </div>
           </div>
         )}
       </div>
