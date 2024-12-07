@@ -4,21 +4,21 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 export function LoginButton() {
   const { data: session } = useSession();
-
-  const handleLogin = () => {
-    session ? signOut() : signIn();
-  };
+  const handleLogin = () => (session ? signOut() : signIn("google"));
 
   return (
-    <button
-      className={`border border-transparent rounded px-4 py-2 transition-colors ${
-        session
-          ? "bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 border-1"
-          : "bg-blue-500 hover:bg-blue-700 text-white"
-      }`}
-      onClick={handleLogin}
-    >
-      {session ? `${session.user?.email ?? "User"} - Log Out` : "Google Log In"}
-    </button>
+    <div>
+      {session ? (
+        <button onClick={handleLogin}>{session.user?.email ?? "User"} - Log Out</button>
+      ) : (
+        <button
+          onClick={handleLogin}
+          className="flex items-center gap-2 px-4 py-2 border rounded-lg bg-blue-700 text-white hover:bg-blue-800"
+        >
+          <img src="/google.png" alt="Google" className="w-4 h-4" />
+          Sign in with Google
+        </button>
+      )}
+    </div>
   );
 }
