@@ -4,6 +4,7 @@ import { FightScene } from "./overlays/FightScene";
 import { useAtom, useAtomValue } from "jotai";
 import { overlayAtom } from "~~/state/overlayAtom";
 import { OVERLAY } from "~~/types";
+import { Heal } from "./overlays/Heal";
 
 interface MapRendererProps {
   mapRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -22,7 +23,7 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
       case OVERLAY.FIGHT:
         return <FightScene data={overlay.data} onDismiss={onDismissOverlay} />;
       case OVERLAY.HEAL:
-        return <ClaimOrb data={overlay.data} onDismiss={onDismissOverlay} />;
+        return <Heal data={overlay.data} onDismiss={onDismissOverlay} />;
       case OVERLAY.CLAIM_ORB:
         return <ClaimOrb data={overlay.data} onDismiss={onDismissOverlay} />;
       default:

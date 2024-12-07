@@ -13,7 +13,7 @@ interface ClaimOrbProps {
 export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
   const { data: session } = useSession();
 
-  const handleClaim = useCallback(() => {
+  const handleClaim = async () => {
     if (!session?.user?.email) {
       console.error("No email present in user session. Try to login again.");
       return;
@@ -21,7 +21,8 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
 
     try {
       notification.info("Claiming ORB...");
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/contract/mint/claimOrb`, {
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contract/mint/claimOrb`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,6 +32,8 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
           chainId: 137,
         }),
       });
+      
+      if(!res.ok) throw new Error("Failed to claim ORB");
 
       notification.success("Claimed ORB!");
       onDismiss();
@@ -38,7 +41,7 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
       console.error("Error while claiming ORB", e);
       notification.error("Error while claiming ORB");
     }
-  }, [session?.user?.email]);
+  };
 
   return (
     <>
