@@ -10,6 +10,9 @@ export const createUser = async (request: CreateUserRequest) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         wallet_address: request.wallet_address,
         email: request.email,

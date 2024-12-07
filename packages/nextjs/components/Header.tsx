@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LoginButton } from "./GoogleSignIn";
+import { PlayerChip, PlayerStats } from "./PlayerStats";
 import { jwtDecode } from "jwt-decode";
 import { useSession } from "next-auth/react";
 import { type OktoContextType, useOkto } from "okto-sdk-react";
@@ -56,6 +57,8 @@ export const Header = () => {
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
+  const [playerStats, setPlayerStats] = useState<PlayerStats | null>(null);
+
   const { isLoggedIn, authenticate, logOut, createWallet } = useOkto() as OktoContextType;
 
   const idToken = useMemo(
@@ -69,8 +72,8 @@ export const Header = () => {
     try {
       const response = await fetchUser({ email: session?.user?.email || "" });
       console.log("fetch user response from DB", response);
-      if (response?.wallet_address) {
-        setUserAddress(response.wallet_address);
+      if (response[0]?.wallet_address) {
+        setPlayerStats(response[0]);
       } else {
         setUserAddress(null);
       }
@@ -104,11 +107,6 @@ export const Header = () => {
     }
   };
 
-  const truncatedAddress = useMemo(() => {
-    if (!userAddress) return null;
-    return `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
-  }, [userAddress]);
-
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
@@ -138,8 +136,13 @@ export const Header = () => {
       </div>
       <div className="navbar-end flex-grow mr-4 px-10">
         {session ? (
-          userAddress ? (
-            <div className="bg-gray-100 px-4 py-2 rounded-md">{truncatedAddress}</div>
+          playerStats ? (
+            <PlayerChip
+              wallet_address={playerStats.wallet_address}
+              attack={playerStats.attack}
+              defense={playerStats.defense}
+              health={playerStats.health}
+            />
           ) : (
             <button
               onClick={handleCreateWallet}
