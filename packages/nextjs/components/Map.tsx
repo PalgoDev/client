@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { fetchTokens } from "~~/actions/fetchTokens";
 
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -101,6 +102,7 @@ const MapWithGeolocation = () => {
               markerRef.current = marker;
 
               lastPositionRef.current = { lat: latitude, lng: longitude };
+              handleFetchTokens();
             },
             error => {
               console.error("Error obtaining geolocation:", error);
@@ -139,6 +141,57 @@ const MapWithGeolocation = () => {
       map.current.setZoom(zoomLevel);
     }
   }, [zoomLevel]);
+
+  const [itemCoords, setItemCoords] = useState<{ long: number; lat: number }[]>([]);
+
+  const handleFetchTokens = async () => {
+    console.log("fetching tokens");
+    if (lastPositionRef.current) {
+      console.log("fetching tokens - 2");
+      const res = await fetchTokens({
+        long: lastPositionRef.current.lng,
+        lat: lastPositionRef.current.lat,
+      });
+      const itemCoordsToPush: { long: number; lat: number }[] = [];
+      res.map((item: any) => {
+        itemCoordsToPush.push({ long: item.longitude, lat: item.latitude });
+      });
+      setItemCoords(itemCoordsToPush);
+      console.log(res, "res from fetch tokens");
+    }
+  };
+
+  useEffect(() => {
+    itemCoords.forEach(item => {
+      // Create a custom marker element
+      const markerDiv = document.createElement("div");
+      markerDiv.innerHTML = `
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="red"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+      `;
+      markerDiv.style.cursor = "pointer";
+
+      // Add a click event listener to the marker element
+      markerDiv.addEventListener("click", () => {
+        console.log(`Marker clicked for item: ${item.long} ${item.lat}`);
+        alert(`Marker clicked for item: ${item.long} ${item.lat}`);
+      });
+
+      // Create and add the marker to the map
+      new mapboxgl.Marker({
+        element: markerDiv,
+      })
+        .setLngLat([item.long, item.lat])
+        .addTo(map.current!);
+    });
+  }, [itemCoords]);
 
   const ZoomControls = () => {
     const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 1)); // Max zoom level is 22
