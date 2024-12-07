@@ -1,4 +1,3 @@
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import "@rainbow-me/rainbowkit/styles.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { getServerSession } from "next-auth";
@@ -6,6 +5,7 @@ import { Session } from "next-auth";
 import { Toaster } from "react-hot-toast";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
+import { authOptions } from "~~/config/auth";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
