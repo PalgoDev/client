@@ -5,11 +5,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const markerRef = useRef<mapboxgl.Marker | null>(null); // Single marker reference
+  const markerRef = useRef<mapboxgl.Marker | null>(null);
   const lastPositionRef = useRef<{ lat: number; lng: number } | null>(null);
   const [distanceTraveled, setDistanceTraveled] = useState(0);
   const [simulatedPosition, setSimulatedPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [joystickOffset, setJoystickOffset] = useState({ x: 0, y: 0 }); // For joystick animation
+  const [zoomLevel, setZoomLevel] = useState(15.5); // Map zoom level
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371; // Radius of the Earth in km
@@ -51,7 +52,7 @@ const MapWithGeolocation = () => {
       map.current = new mapboxgl.Map({
         container: mapRef.current!,
         style: "mapbox://styles/mapbox/light-v11",
-        zoom: 15.5,
+        zoom: zoomLevel,
       });
 
       map.current.on("load", () => {
@@ -98,6 +99,59 @@ const MapWithGeolocation = () => {
       lastPositionRef.current = { lat, lng };
     }
   }, [simulatedPosition]);
+
+  useEffect(() => {
+    if (map.current) {
+      map.current.setZoom(zoomLevel);
+    }
+  }, [zoomLevel]);
+
+  const ZoomControls = () => {
+    const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 1, 22)); // Max zoom level is 22
+    const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 1, 0)); // Min zoom level is 0
+
+    return (
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <button
+          style={{
+            width: "40px",
+            height: "40px",
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={handleZoomIn}
+        >
+          +
+        </button>
+        <button
+          style={{
+            width: "40px",
+            height: "40px",
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+          onClick={handleZoomOut}
+        >
+          -
+        </button>
+      </div>
+    );
+  };
 
   const Joystick = () => {
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -170,6 +224,7 @@ const MapWithGeolocation = () => {
       <div ref={mapRef} style={{ width: "100%", height: "500px", position: "relative" }} />
       <p>Distance Traveled: {distanceTraveled.toFixed(2)} meters</p>
       <Joystick />
+      <ZoomControls />
     </div>
   );
 };
