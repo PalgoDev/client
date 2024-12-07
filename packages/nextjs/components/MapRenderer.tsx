@@ -12,14 +12,18 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
 
   const isOverlayOpen = overlay.type !== OVERLAY.NONE;
 
+  const onDismissOverlay = useCallback(() => {
+    setOverlay({ type: OVERLAY.NONE, data: null });
+  }, [setOverlay]);
+
   const renderOverlay = useCallback(() => {
     switch (overlay.type) {
       case OVERLAY.CLAIM_ORB:
-        return <ClaimOrb data={overlay.data} />;
+        return <ClaimOrb data={overlay.data} onDismiss={onDismissOverlay} />;
       default:
         return null;
     }
-  }, []);
+  }, [overlay]);
 
   return (
     <>
@@ -48,16 +52,13 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
 
             position: "relative",
             zIndex: 1,
-            transition: "all 0.25s"
+            transition: "all 0.25s ease-in-out",
           }}
         />
 
         {isOverlayOpen && (
-          <div
-            className="absolute top-0 left-0 w-full h-full z-10"
-            onClick={() => setOverlay({ type: OVERLAY.NONE, data: null })}
-          >
-            {renderOverlay()}
+          <div className="absolute top-0 left-0 w-full h-full z-10 fade-in grid place-items-center">
+            <div className="w-full h-full xl:w-3/4 grid place-items-center">{renderOverlay()}</div>
           </div>
         )}
       </div>

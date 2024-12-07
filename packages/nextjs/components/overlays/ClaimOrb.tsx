@@ -3,14 +3,30 @@ interface ClaimOrbProps {
     long: number;
     lat: number;
   };
+  onDismiss: () => void;
 }
-export const ClaimOrb = ({ data }: ClaimOrbProps) => {
+export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
   return (
     <>
-      <div className="p-5 bg-white w-1/2 h-3/4">
-        <p>Claim Orb!</p>
-        <p>Long: {data.long}</p>
-        <p>Lat: {data.lat}</p>
+      <div className="w-1/2 h-1/2 rounded-xl bg-white">
+        <div className="flex justify-center -mt-16">
+          <img
+            src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHNhcHNkaXU0bThkenptcTIyMHc4bWc3NzlvYWg2ZHB0ZDd5a210aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ODaa2WYdTZ3sTrXNAT/giphy.webp"
+            width="124"
+            height="124"
+          />
+        </div>
+
+        <div>
+          <h1 className="font-bold text-center text-3xl font-serif">Claim ORB</h1>
+          <h3 className="text-gray-400 text-sm text-center">
+            {data.lat}, {data.long}
+          </h3>
+        </div>
+
+        <div className="mt-10 grid place-items-center">
+          <button className="font-bold bg-purple-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>Claim</button>
+        </div>
       </div>
     </>
   );
