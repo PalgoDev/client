@@ -295,7 +295,7 @@ const MapWithGeolocation = () => {
         Start a Fight (Simulated)
       </button> */}
 
-      <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
+      <div className="flex justify-around items-center gap-2 w-full h-[20vh] pb-5">
         <Joystick />
         <ZoomControls />
       </div>
