@@ -32,8 +32,8 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
           chainId: 137,
         }),
       });
-      
-      if(!res.ok) throw new Error("Failed to claim ORB");
+
+      if (!res.ok) throw new Error("Failed to claim ORB");
 
       notification.success("Claimed ORB!");
       onDismiss();

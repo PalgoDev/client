@@ -23,13 +23,14 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
     try {
       notification.info("Claiming potion...");
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contract/mint/claimHeal`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contract/mint/claimPotion`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: session?.user?.email,
+
           chainId: 137,
         }),
       });
@@ -60,7 +61,7 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
 
         <div className="mt-10 flex justify-center space-x-2">
           <button className="font-bold bg-green-700 text-white px-4 py-2 rounded-xl" onClick={handleClaim}>
-            Heal
+            Use a potion
           </button>
           <button className="font-bold bg-gray-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>
             Cancel
