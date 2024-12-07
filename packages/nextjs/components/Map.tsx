@@ -141,15 +141,12 @@ const MapWithGeolocation = () => {
   }, [zoomLevel]);
 
   const ZoomControls = () => {
-    const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 1, 22)); // Max zoom level is 22
-    const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 1, 0)); // Min zoom level is 0
+    const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 1)); // Max zoom level is 22
+    const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 1)); // Min zoom level is 0
 
     return (
       <div
         style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
           display: "flex",
           flexDirection: "column",
           gap: "10px",
@@ -228,9 +225,7 @@ const MapWithGeolocation = () => {
           height: "100px",
           background: "rgba(0, 0, 0, 0.1)",
           borderRadius: "50%",
-          position: "absolute",
-          bottom: "20px",
-          left: "20px",
+
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -254,11 +249,12 @@ const MapWithGeolocation = () => {
   };
 
   return (
-    <div>
-      <div ref={mapRef} style={{ width: "100%", height: "500px", position: "relative" }} />
-      <p>Distance Traveled: {distanceTraveled.toFixed(2)} meters</p>
-      <Joystick />
-      <ZoomControls />
+    <div className="flex flex-col h-90vh justify-start items-center">
+      <div ref={mapRef} style={{ width: "90%", height: "70vh", borderRadius: "10px", marginBottom: "10px" }} />
+      <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
+        <Joystick />
+        <ZoomControls />
+      </div>
     </div>
   );
 };

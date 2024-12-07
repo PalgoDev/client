@@ -9,7 +9,6 @@ import Map from "~~/components/Map";
 const Home: NextPage = () => {
   return (
     <>
-      <h1>Hello World</h1>
       <Map />
     </>
   );
