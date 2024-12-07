@@ -47,7 +47,7 @@ p {
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 @keyframes fadeIn {
@@ -56,5 +56,149 @@ p {
   }
   to {
     opacity: 1;
+  }
+}
+
+
+.scale-down-in {
+  animation: scaleDownIn 0.5s ease-in-out;
+}
+
+@keyframes scaleDownIn {
+  from {
+    transform: scale(3);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.scale-up {
+  animation: 0.5s scaleUp 0.5s ease-in-out;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(1.4);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.slide-from-left {
+  animation: slideFromLeft 0.5s ease-in-out forwards;
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0.5;
+    transform: translateX(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-from-right {
+  animation: slideFromRight 0.5s ease-in-out forwards;
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0.5;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.delayed-fade-out {
+  animation: 3s delayedFadeOut 1s ease-in-out forwards;
+}
+
+.delayed-fade-out-2 {
+  animation: 10s delayedFadeOut 1s ease-in forwards;
+}
+
+@keyframes delayedFadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.hit-animation-1 {
+  animation: hitAnimation1 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes hitAnimation1 {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  60% {
+    transform: scale(1.1) translateX(0.6rem);
+  }
+
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+
+.hit-animation-2 {
+  animation: hitAnimation2 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes hitAnimation2 {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  60% {
+    transform: scale(1.1) translateX(-0.6rem);
+  }
+
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+
+.damage-text {
+  position: absolute;
+  top: 0;
+  animation: 0.2s damageText 0.5s ease-in-out infinite;
+  @apply text-white text-4xl italic font-semibold;
+}
+
+@keyframes damageText {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-1rem);
+    opacity: 0;
   }
 }

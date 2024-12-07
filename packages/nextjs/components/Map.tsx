@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MapRenderer } from "./MapRenderer";
+import { useAtomValue, useSetAtom } from "jotai";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { fetchTokens } from "~~/actions/fetchTokens";
 import { useMarkers } from "~~/hooks/useMarkers";
+import { overlayAtom } from "~~/state/overlayAtom";
 import { OVERLAY } from "~~/types";
 
 const MapWithGeolocation = () => {
@@ -144,7 +146,7 @@ const MapWithGeolocation = () => {
     }
   }, [zoomLevel]);
 
-  const [itemCoords, setItemCoords] = useState<{ type: OVERLAY, long: number; lat: number }[]>([]);
+  const [itemCoords, setItemCoords] = useState<{ type: OVERLAY; long: number; lat: number }[]>([]);
 
   const handleFetchTokens = async () => {
     console.log("fetching tokens");
@@ -272,6 +274,9 @@ const MapWithGeolocation = () => {
       </div>
     );
   };
+
+  // Testing button
+  const setOverlay = useSetAtom(overlayAtom);
 
   return (
     <div className="flex flex-col h-90vh justify-start items-center">
