@@ -5,7 +5,7 @@ interface FetchTokensRequest {
   lat: number;
 }
 
-const LIMIT = 1500;
+const LIMIT = 1000;
 
 export const fetchTokens = async (request: FetchTokensRequest) => {
   console.log(request, "request to fetch tokens");
