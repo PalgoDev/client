@@ -10,8 +10,14 @@ export const createUser = async (request: CreateUserRequest) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
       method: "POST",
-      body: JSON.stringify(request),
+      body: JSON.stringify({
+        wallet_address: request.wallet_address,
+        email: request.email,
+        name: "chill guy",
+        description: "chill guy",
+      }),
     });
+    console.log(response, "response from create user");
     const res = await response.json();
     console.log(res, "res from create user");
     return res;
