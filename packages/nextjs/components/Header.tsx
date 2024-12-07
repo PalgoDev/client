@@ -4,6 +4,9 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import GoogleSignIn from "./GoogleSignIn";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { type OktoContextType, type User, useOkto } from "okto-sdk-react";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
@@ -64,9 +67,13 @@ export const Header = () => {
     useCallback(() => setIsDrawerOpen(false), []),
   );
 
+  const okto = useOkto();
+
+  const isSignedIn = okto?.isLoggedIn;
+
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
+    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
+      <div className="navbar-start w-auto lg:w-1/2 px-10">
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
             tabIndex={0}
@@ -102,9 +109,20 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul> */}
       </div>
-      <div className="navbar-end flex-grow mr-4">
-        <RainbowKitCustomConnectButton />
-        <FaucetButton />
+      <div className="navbar-end flex-grow mr-4 px-10">
+        {isSignedIn ? (
+          <button
+            onClick={() => {
+              localStorage.removeItem("okto_user_id");
+              okto?.logOut();
+              googleLogout();
+            }}
+          >
+            Logout
+          </button>
+        ) : (
+          <GoogleSignIn />
+        )}
       </div>
     </div>
   );
