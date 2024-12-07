@@ -55,6 +55,11 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
           <h3 className="text-gray-400 text-sm text-center">
             {data.lat}, {data.long}
           </h3>
+          <div className="mt-3 flex justify-center gap-2">
+            <span className="badge badge-secondary">+10 Health</span>
+            <span className="badge badge-secondary">+3 Attack</span>
+            <span className="badge badge-secondary">+1 Defense</span>
+          </div>
         </div>
 
         <div className="mt-10 flex justify-center space-x-2">

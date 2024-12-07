@@ -1,4 +1,5 @@
 import React from "react";
+import { StoreModal } from "./StoreModal";
 
 export type PlayerStats = {
   wallet_address: string;
@@ -54,19 +55,19 @@ export const PlayerChip: React.FC<PlayerStats> = ({ wallet_address, attack, defe
           </p>
 
           {/* Action Buttons */}
-          <div className="flex justify-between items-center mt-4 flex-row-reverse">
-            <button className="bg-purple-500 border text-black px-4 py-2 rounded hover:bg-gray-300 transition-colors min-w-[40%]">
-              Buy
-            </button>
-            <button className="bg-transparent border border-gray-700 text-black px-4 py-2 rounded hover:bg-gray-300 transition-colors min-w-[40%]">
-              Swap
+          <div className="flex justify-between items-center mt-4 w-full">
+            <button
+              className="bg-transparent border border-gray-700 text-black px-4 py-2 rounded-md hover:bg-gray-300 transition-colors min-w-[40%] w-full"
+              onClick={() => (document.getElementById("store_modal") as HTMLDialogElement).showModal()}
+            >
+              Store
             </button>
           </div>
 
           {/* Close Button */}
           <div className="modal-action">
             <button
-              className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 px-4 py-2 transition-colors"
+              className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-red-500 px-4 py-2 transition-colors w-full"
               onClick={() => (document.getElementById("my_modal_1") as HTMLDialogElement).close()}
             >
               Close
@@ -74,6 +75,8 @@ export const PlayerChip: React.FC<PlayerStats> = ({ wallet_address, attack, defe
           </div>
         </div>
       </dialog>
+
+      <StoreModal wallet_address={wallet_address} />
     </>
   );
 };

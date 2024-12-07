@@ -61,7 +61,7 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
 
         <div className="mt-10 flex justify-center space-x-2">
           <button className="font-bold bg-green-700 text-white px-4 py-2 rounded-xl" onClick={handleClaim}>
-            Use a potion
+            Claim a potion
           </button>
           <button className="font-bold bg-gray-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>
             Cancel
