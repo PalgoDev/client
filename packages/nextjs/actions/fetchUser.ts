@@ -5,9 +5,9 @@ interface FetchUserRequest {
 }
 
 export const fetchUser = async (request: FetchUserRequest) => {
-  console.log(request, "request to create user");
+  console.log(request, "request to fetch user", `${process.env.NEXT_PUBLIC_API_URL}/user/search/params?email=${request.email}`);
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user?email=${request.email}`, {
       method: "GET",
     });
     const res = await response.json();
@@ -15,7 +15,7 @@ export const fetchUser = async (request: FetchUserRequest) => {
   } catch (error) {
     console.error(error, "error creating user");
     return {
-      error: "Error creating the user",
+      error: "Error fetching the user",
       status: 500,
     };
   }
