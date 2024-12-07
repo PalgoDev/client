@@ -41,12 +41,18 @@ export const Win = () => {
           className="absolute right-0 md:right-1/4 slide-from-right z-10 rounded-full border-2 border-red-500"
         />
 
-        <button
-          className="absolute bottom-1/4 bg-green-300 hover:bg-green-400 px-4 py-3 rounded-full transition"
-          onClick={closeFight}
-        >
-          Awesome!
-        </button>
+        <div className="absolute bottom-[80px]">
+          <div className="flex gap-2">
+            <span className="badge badge-secondary">+1 Attack</span>
+            <span className="badge badge-secondary">+10 CASH</span>
+          </div>
+          <button
+            className="w-full mt-5 bg-green-300 hover:bg-green-400 px-4 py-3 rounded-full transition"
+            onClick={closeFight}
+          >
+            Awesome!
+          </button>
+        </div>
       </div>
     </>
   );
