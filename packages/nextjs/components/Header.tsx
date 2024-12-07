@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -68,15 +68,88 @@ export const Header = () => {
     useCallback(() => setIsDrawerOpen(false), []),
   );
 
-  const okto = useOkto() as OktoContextType;
-
-  const isSignedIn = okto?.isLoggedIn ?? false;
-
   const { data: session } = useSession();
+
+  const {
+    isLoggedIn,
+    authenticate,
+    authenticateWithUserId,
+    logOut,
+    getPortfolio,
+    transferTokens,
+    getWallets,
+    createWallet,
+    getSupportedNetworks,
+    getSupportedTokens,
+    getUserDetails,
+    orderHistory,
+    getNftOrderDetails,
+    showWidgetModal,
+    showOnboardingModal,
+    getRawTransactionStatus,
+    transferTokensWithJobStatus,
+    transferNft,
+    transferNftWithJobStatus,
+    executeRawTransaction,
+    executeRawTransactionWithJobStatus,
+    setTheme,
+    getTheme,
+  } = useOkto() as OktoContextType;
+  const idToken = useMemo(() => {
+    console.log("session in header", session);
+    return session
+      ? //@ts-ignore
+        session.id_token
+      : null;
+  }, [session]);
+
+  async function handleAuthenticate(): Promise<any> {
+    if (!idToken) {
+      return;
+    }
+    return new Promise(resolve => {
+      authenticate(idToken, (result: any, error: any) => {
+        if (result) {
+          console.log("Authentication successful", result);
+          resolve({ result: true });
+        } else if (error) {
+          console.error("Authentication error:", error);
+          resolve({ result: false, error });
+        }
+      });
+    });
+  }
+
+  async function handleLogout() {
+    try {
+      logOut();
+      return { result: "logout success" };
+    } catch (error) {
+      return { result: "logout failed" };
+    }
+  }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("Okto is authenticated");
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     console.log(session, "session");
+    if (!isLoggedIn) {
+      handleAuthenticate();
+    }
   }, [session]);
+
+  const handleCreateWallet = async () => {
+    try {
+      const res = await createWallet();
+      console.log("create wallet res", res);
+    } catch (err) {
+      console.log("error creating wallet", err);
+    }
+  };
 
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
@@ -117,18 +190,8 @@ export const Header = () => {
         </ul> */}
       </div>
       <div className="navbar-end flex-grow mr-4 px-10">
-        {isSignedIn ? (
-          <button
-            onClick={() => {
-              okto?.logOut();
-              googleLogout();
-            }}
-          >
-            Logout
-          </button>
-        ) : (
-          <LoginButton />
-        )}
+        <button onClick={handleCreateWallet}>Create Wallet</button>
+        <LoginButton />
       </div>
     </div>
   );
