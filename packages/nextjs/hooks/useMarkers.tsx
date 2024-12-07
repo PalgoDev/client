@@ -1,12 +1,16 @@
 import { useEffect, useRef } from "react";
+import { useSetAtom } from "jotai";
 import mapboxgl from "mapbox-gl";
+import { overlayAtom } from "~~/state/overlayAtom";
+import { OVERLAY } from "~~/types";
 
 const getDefaultMarker = () => {
-  const imageUrl = "https://i.giphy.com/qJzZ4APiDZQuJDY7vh.webp";
+  const imageUrl =
+    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHNhcHNkaXU0bThkenptcTIyMHc4bWc3NzlvYWg2ZHB0ZDd5a210aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ODaa2WYdTZ3sTrXNAT/giphy.webp";
   const img = document.createElement("img");
   img.src = imageUrl;
-  img.width = 36;
-  img.height = 36;
+  img.width = 46;
+  img.height = 46;
   img.style.borderRadius = "50%";
   return img;
 };
@@ -19,6 +23,8 @@ interface UseMarkerProps {
   }[];
 }
 export const useMarkers = ({ map, itemCoords }: UseMarkerProps) => {
+  const setOverlayType = useSetAtom(overlayAtom);
+
   useEffect(() => {
     itemCoords.forEach(item => {
       // Create a custom marker element
@@ -28,8 +34,10 @@ export const useMarkers = ({ map, itemCoords }: UseMarkerProps) => {
 
       // Add a click event listener to the marker element
       markerElement.addEventListener("click", () => {
-        console.log(`Marker clicked for item: ${item.long} ${item.lat}`);
-        alert(`Marker clicked for item: ${item.long} ${item.lat}`);
+        setOverlayType({
+          type: OVERLAY.CLAIM_ORB, // LATER replace when new types of items are added
+          data: { long: item.long, lat: item.lat },
+        });
       });
 
       // Create and add the marker to the map

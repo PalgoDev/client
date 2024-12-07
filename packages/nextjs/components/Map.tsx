@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { MapRenderer } from "./MapRenderer";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { fetchTokens } from "~~/actions/fetchTokens";
@@ -273,7 +274,7 @@ const MapWithGeolocation = () => {
 
   return (
     <div className="flex flex-col h-90vh justify-start items-center">
-      <div ref={mapRef} style={{ width: "90%", height: "70vh", borderRadius: "10px", marginBottom: "10px" }} />
+      <MapRenderer mapRef={mapRef} />
 
       <div className="flex justify-around items-center gap-4 w-full h-[20vh]">
         <Joystick />
