@@ -18,7 +18,7 @@ const GoogleSignIn = () => {
 
       console.log(jwtDecode(credential).sub, "sub");
 
-      okto?.authenticate(jwtDecode(credential).sub!, (res: any, err: any) => {
+      okto?.authenticateWithUserId(jwtDecode(credential).sub!, credential, (res: any, err: any) => {
         console.log(res, err);
         if (err) {
           console.error("Authentication failed:", err);
