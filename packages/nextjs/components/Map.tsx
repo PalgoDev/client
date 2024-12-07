@@ -16,7 +16,7 @@ const MapWithGeolocation = () => {
   const [distanceTraveled, setDistanceTraveled] = useState(0);
   const [simulatedPosition, setSimulatedPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [joystickOffset, setJoystickOffset] = useState({ x: 0, y: 0 }); // For joystick animation
-  const [zoomLevel, setZoomLevel] = useState(15.5); // Map zoom level
+  const [zoomLevel, setZoomLevel] = useState(17.5); // Map zoom level
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371; // Radius of the Earth in km
@@ -58,6 +58,7 @@ const MapWithGeolocation = () => {
       map.current = new mapboxgl.Map({
         container: mapRef.current!,
         zoom: zoomLevel,
+        pitch: 75,
       });
 
       map.current?.on("style.load", () => {
@@ -73,6 +74,7 @@ const MapWithGeolocation = () => {
             filter: ["==", "extrude", "true"],
             type: "fill-extrusion",
             minzoom: 15,
+
             paint: {
               "fill-extrusion-color": [
                 "interpolate",
