@@ -4,6 +4,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { fetchTokens } from "~~/actions/fetchTokens";
 import { useMarkers } from "~~/hooks/useMarkers";
+import { OVERLAY } from "~~/types";
 
 const MapWithGeolocation = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -143,7 +144,7 @@ const MapWithGeolocation = () => {
     }
   }, [zoomLevel]);
 
-  const [itemCoords, setItemCoords] = useState<{ long: number; lat: number }[]>([]);
+  const [itemCoords, setItemCoords] = useState<{ type: OVERLAY, long: number; lat: number }[]>([]);
 
   const handleFetchTokens = async () => {
     console.log("fetching tokens");
@@ -153,9 +154,9 @@ const MapWithGeolocation = () => {
         long: lastPositionRef.current.lng,
         lat: lastPositionRef.current.lat,
       });
-      const itemCoordsToPush: { long: number; lat: number }[] = [];
+      const itemCoordsToPush: { type: OVERLAY; long: number; lat: number }[] = [];
       res.map((item: any) => {
-        itemCoordsToPush.push({ long: item.longitude, lat: item.latitude });
+        itemCoordsToPush.push({ type: item.type, long: item.longitude, lat: item.latitude });
       });
       setItemCoords(itemCoordsToPush);
       console.log(res, "res from fetch tokens");

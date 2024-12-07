@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useSetAtom } from "jotai";
 import mapboxgl from "mapbox-gl";
+import { IMAGE_URL } from "~~/config";
 import { overlayAtom } from "~~/state/overlayAtom";
 import { OVERLAY } from "~~/types";
 
 const getDefaultMarker = () => {
-  const imageUrl =
-    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHNhcHNkaXU0bThkenptcTIyMHc4bWc3NzlvYWg2ZHB0ZDd5a210aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/ODaa2WYdTZ3sTrXNAT/giphy.webp";
+  const imageUrl = IMAGE_URL.orb;
   const img = document.createElement("img");
   img.src = imageUrl;
   img.width = 46;
@@ -15,9 +15,43 @@ const getDefaultMarker = () => {
   return img;
 };
 
+const getFightMarker = () => {
+  const imageUrl = IMAGE_URL.Not_so_chill_guy;
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.width = 46;
+  img.height = 46;
+  img.style.borderRadius = "50%";
+  return img;
+};
+
+const getHealMarker = () => {
+  const imageUrl = IMAGE_URL.Chill_guy;
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.width = 46;
+  img.height = 46;
+  img.style.borderRadius = "50%";
+  return img;
+};
+
+const getMarkerByType = (type: OVERLAY) => {
+  switch (type) {
+    case OVERLAY.FIGHT:
+      return getFightMarker();
+    case OVERLAY.HEAL:
+      return getHealMarker();
+    case OVERLAY.CLAIM_ORB:
+      return getDefaultMarker();
+    default:
+      return getDefaultMarker();
+  }
+};
+
 interface UseMarkerProps {
   map: ReturnType<typeof useRef<mapboxgl.Map | null>>;
   itemCoords: {
+    type: OVERLAY;
     long: number;
     lat: number;
   }[];
@@ -28,14 +62,15 @@ export const useMarkers = ({ map, itemCoords }: UseMarkerProps) => {
   useEffect(() => {
     itemCoords.forEach(item => {
       // Create a custom marker element
-      const markerElement = getDefaultMarker();
+      console.log("ITEM TYPE HERE", item.type);
+      const markerElement = getMarkerByType(item.type);
 
       markerElement.style.cursor = "pointer";
 
       // Add a click event listener to the marker element
       markerElement.addEventListener("click", () => {
         setOverlayType({
-          type: OVERLAY.CLAIM_ORB, // LATER replace when new types of items are added
+          type: item.type,
           data: { long: item.long, lat: item.lat },
         });
       });
