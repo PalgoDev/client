@@ -109,3 +109,66 @@ p {
     opacity: 1;
   }
 }
+
+
+.scale-down-in {
+  animation: scaleDownIn 0.5s ease-in-out;
+}
+
+@keyframes scaleDownIn {
+  from {
+    transform: scale(3);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.scale-up {
+  animation: 0.5s scaleUp 0.5s ease-in-out;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(1.1);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.slide-from-left {
+  animation: slideFromLeft 0.5s ease-in-out forwards;
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0.5;
+    transform: translateX(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-from-right {
+  animation: slideFromRight 0.5s ease-in-out forwards;
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0.5;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
