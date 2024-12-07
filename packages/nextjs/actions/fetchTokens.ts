@@ -14,7 +14,7 @@ export const fetchTokens = async (request: FetchTokensRequest) => {
       `${process.env.NEXT_PUBLIC_API_URL}/entity/?longitude=${request.long}&latitude=${request.lat}&limit=${LIMIT}`,
     );
     const res = await response.json();
-    console.log(res, "response");
+    // console.log(res, "response");
     return res;
   } catch (error) {
     console.error(error, "error from fetching tokens");

@@ -1,41 +1,22 @@
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { type OktoContextType, useOkto } from "okto-sdk-react";
+"use client";
 
-const GoogleSignIn = () => {
-  const okto = useOkto() as OktoContextType;
-  const handleSuccess = (credentialResponse: any) => {
-    try {
-      console.log(credentialResponse, "login success");
+import { signIn, signOut, useSession } from "next-auth/react";
 
-      const { credential } = credentialResponse;
-      if (!credential) {
-        console.error("No credential returned");
-        return;
-      }
+export function LoginButton() {
+  const { data: session } = useSession();
 
-      console.log(jwtDecode(credential), "credential");
-
-      console.log(jwtDecode(credential).sub, "sub");
-
-      okto?.authenticateWithUserId(jwtDecode(credential).sub!, credential, (res: any, err: any) => {
-        console.log(res, err);
-        if (err) {
-          console.error("Authentication failed:", err);
-        } else {
-          console.log("Authenticated successfully", res);
-        }
-      });
-    } catch (error) {
-      console.error("Error during authentication process:", error);
-    }
+  const handleLogin = () => {
+    session ? signOut() : signIn();
   };
 
   return (
-    <div>
-      <GoogleLogin onSuccess={handleSuccess} useOneTap />
-    </div>
+    <button
+      className={`border border-transparent rounded px-4 py-2 transition-colors ${
+        session ? "bg-red-500 hover:bg-red-700 text-white" : "bg-blue-500 hover:bg-blue-700 text-white"
+      }`}
+      onClick={handleLogin}
+    >
+      Google {session ? "Log Out" : "Log In"}
+    </button>
   );
-};
-
-export default GoogleSignIn;
+}
