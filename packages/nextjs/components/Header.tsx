@@ -69,8 +69,8 @@ export const Header = () => {
     try {
       const response = await fetchUser({ email: session?.user?.email || "" });
       console.log("fetch user response from DB", response);
-      if (response?.wallet_address) {
-        setUserAddress(response.wallet_address);
+      if (response[0]?.wallet_address) {
+        setUserAddress(response[0].wallet_address);
       } else {
         setUserAddress(null);
       }
