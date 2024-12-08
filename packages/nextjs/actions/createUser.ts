@@ -3,10 +3,13 @@
 interface CreateUserRequest {
   wallet_address: string;
   email: string;
+  chainId: number;
 }
 
 export const createUser = async (request: CreateUserRequest) => {
   console.log(request, "request to create user");
+
+  const chainId = request.chainId;
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
       method: "POST",
@@ -18,7 +21,7 @@ export const createUser = async (request: CreateUserRequest) => {
         email: request.email,
         name: "chill guy",
         description: "chill guy",
-        chainId: 137,
+        chainId,
       }),
     });
     console.log(response, "response from create user");

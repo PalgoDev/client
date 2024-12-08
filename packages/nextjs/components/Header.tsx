@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { LoginButton } from "./GoogleSignIn";
 import { PlayerChip, PlayerStats } from "./PlayerStats";
 import { Address, Avatar, Badge, Identity, Name } from "@coinbase/onchainkit/identity";
+import { useAtom, useAtomValue } from "jotai";
 import { jwtDecode } from "jwt-decode";
 import { signOut, useSession } from "next-auth/react";
 import { type OktoContextType, useOkto } from "okto-sdk-react";
@@ -16,7 +17,9 @@ import { Hex } from "viem";
 import { Bars3Icon, BugAntIcon, HomeIcon, PowerIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { createUser } from "~~/actions/createUser";
 import { fetchUser } from "~~/actions/fetchUser";
+import { chainNameById } from "~~/config";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { chainAtom } from "~~/state/chainAtom";
 
 type HeaderMenuLink = {
   label: string;
@@ -65,6 +68,8 @@ export const Header = () => {
 
   const { isLoggedIn, authenticate, logOut, createWallet } = useOkto() as OktoContextType;
 
+  const [chainId, setChainId] = useAtom(chainAtom);
+
   const idToken = useMemo(
     () =>
       //@ts-ignore
@@ -102,6 +107,7 @@ export const Header = () => {
         const response = await createUser({
           wallet_address: res.wallets[0].address,
           email: session?.user?.email || "",
+          chainId,
         });
         console.log("create user response", response);
         if (response) setUserAddress(res.wallets[0].address);
@@ -198,15 +204,39 @@ export const Header = () => {
                 onClick={() => (document.getElementById("chains") as HTMLDialogElement).showModal()}
                 className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 px-4 py-2 transition-colors"
               >
-                Switch Chain
+                {chainNameById[chainId as any] || "Switch Chain"}
               </button>
               <dialog id="chains" className="modal">
                 <div className="modal-box">
                   <div className="flex flex-col gap-2">
                     <ul className="list-none">
-                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">Polygon</li>
-                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">BSC</li>
-                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">Ethereum</li>
+                      <li
+                        className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1"
+                        onClick={() => {
+                          setChainId(137);
+                          (document.getElementById("chains") as HTMLDialogElement)?.close();
+                        }}
+                      >
+                        Polygon
+                      </li>
+                      <li
+                        className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1"
+                        onClick={() => {
+                          setChainId(56);
+                          (document.getElementById("chains") as HTMLDialogElement)?.close();
+                        }}
+                      >
+                        BNB Chain
+                      </li>
+                      <li
+                        className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1"
+                        onClick={() => {
+                          setChainId(8453);
+                          (document.getElementById("chains") as HTMLDialogElement)?.close();
+                        }}
+                      >
+                        Base
+                      </li>
                     </ul>
                     <div className="modal-action">
                       <button

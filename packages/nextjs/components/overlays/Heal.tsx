@@ -3,6 +3,8 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { IMAGE_URL } from "~~/config";
 import { notification } from "~~/utils/scaffold-eth";
+import { useAtomValue } from "jotai";
+import { chainAtom } from "~~/state/chainAtom";
 
 interface HealProps {
   data: {
@@ -15,6 +17,8 @@ interface HealProps {
 export const Heal = ({ data, onDismiss }: HealProps) => {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+
+  const chainId = useAtomValue(chainAtom)
 
   const handleClaim = useCallback(async () => {
     setIsLoading(true);
@@ -34,7 +38,7 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
         body: JSON.stringify({
           email: session?.user?.email,
 
-          chainId: 137,
+          chainId,
         }),
       });
 

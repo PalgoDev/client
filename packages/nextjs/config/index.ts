@@ -9,3 +9,9 @@ export const IMAGE_URL = {
   electricity: "https://i.giphy.com/SsBz0oSJ1botYaLqAR.webp",
   win: "https://img.freepik.com/free-photo/cup-man-achievement-success-honor_1150-1719.jpg",
 };
+
+export const chainNameById = {
+  137: "Polygon",
+  56: "BNB Chain",
+  8453: "Base",
+} as const;

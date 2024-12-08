@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useAtomValue } from "jotai";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { IMAGE_URL } from "~~/config";
+import { chainAtom } from "~~/state/chainAtom";
 import { notification } from "~~/utils/scaffold-eth";
 
 interface ClaimOrbProps {
@@ -14,6 +16,8 @@ interface ClaimOrbProps {
 export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+
+  const chainId = useAtomValue(chainAtom);
 
   const handleClaim = async () => {
     setIsLoading(true);
@@ -32,7 +36,7 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
         },
         body: JSON.stringify({
           email: session?.user?.email,
-          chainId: 137,
+          chainId,
         }),
       });
 

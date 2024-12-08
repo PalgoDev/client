@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { IMAGE_URL } from "~~/config";
 import { fightStepAtom } from "~~/state/fightAtom";
 import { FIGHT_STEP } from "~~/types";
+import { chainAtom } from "~~/state/chainAtom";
 
 export const Fighting = () => {
   const setStep = useSetAtom(fightStepAtom);
+
+  const chainId = useAtomValue(chainAtom)
 
   const [damage0, setDamage0] = useState(0);
   const [damage1, setDamage1] = useState(0);
@@ -19,7 +22,7 @@ export const Fighting = () => {
       body: JSON.stringify({
         player_1_id: 4,
         player_2_id: 3,
-        chainId: 137,
+        chainId,
       }),
     }).then(res => res.json());
   };
