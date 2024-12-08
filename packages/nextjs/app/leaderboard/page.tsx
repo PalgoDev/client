@@ -17,7 +17,7 @@ const Leaderboard = async () => {
   const sortedRanks = ranks.sort((a: any, b: any) => b.wins - a.wins);
 
   return (
-    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-16">
+    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-6">
       <h1 className="text-primary text-2xl font-bold mb-6">Leaderboard</h1>
       <div className="w-full max-w bg-background rounded-lg shadow-sm">
         <div className="flex justify-start text-accent font-semibold border-b border-divider pb-2">

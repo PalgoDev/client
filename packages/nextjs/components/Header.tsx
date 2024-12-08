@@ -13,7 +13,7 @@ import { type OktoContextType, useOkto } from "okto-sdk-react";
 import GoogleButton from "react-google-button";
 import toast from "react-hot-toast";
 import { Hex } from "viem";
-import { Bars3Icon, BugAntIcon, PowerIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BugAntIcon, HomeIcon, PowerIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import { createUser } from "~~/actions/createUser";
 import { fetchUser } from "~~/actions/fetchUser";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
@@ -25,15 +25,15 @@ type HeaderMenuLink = {
 };
 
 export const menuLinks: HeaderMenuLink[] = [
-  { label: "Home", href: "/" },
-  { label: "Debug Contracts", href: "/debug", icon: <BugAntIcon className="h-4 w-4" /> },
+  { label: "Home", href: "/", icon: <HomeIcon className="h-4 w-4" /> },
+  { label: "Leaderboard", href: "/leaderboard", icon: <TrophyIcon className="h-4 w-4" /> },
 ];
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex flex-col gap-2 z-10">
       {menuLinks.map(({ label, href, icon }) => {
         const isActive = pathname === href;
         return (
@@ -43,7 +43,7 @@ export const HeaderMenuLinks = () => {
               passHref
               className={`${
                 isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+              } hover:bg-background hover:shadow-md focus:!bg-background active:!text-neutral py-1.5 px-3 text-md rounded-full gap-2 grid grid-flow-col`}
             >
               {icon}
               <span>{label}</span>
@@ -51,7 +51,7 @@ export const HeaderMenuLinks = () => {
           </li>
         );
       })}
-    </>
+    </div>
   );
 };
 
@@ -132,16 +132,41 @@ export const Header = () => {
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
             tabIndex={0}
-            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-            onClick={() => setIsDrawerOpen(prev => !prev)}
+            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:border-secondary" : "hover:bg-transparent"}`}
+            onClick={() => {
+              setIsDrawerOpen(prev => !prev);
+              (document.getElementById("header_menu") as HTMLDialogElement).showModal();
+            }}
           >
             <Bars3Icon className="h-3/4" />
           </label>
-          {isDrawerOpen && (
-            <ul className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-              <HeaderMenuLinks />
-            </ul>
-          )}
+          {
+            <dialog id="header_menu" className="modal">
+              <div className="modal-box">
+                {menuLinks.map(({ label, href, icon }) => {
+                  return (
+                    <Link
+                      onClick={() => (document.getElementById("header_menu") as HTMLDialogElement).close()}
+                      href={href}
+                      key={href}
+                      className="flex items-center gap-2 py-2"
+                    >
+                      {icon}
+                      {label}
+                    </Link>
+                  );
+                })}
+                <div className="modal-action">
+                  <button
+                    className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-red-500 px-4 py-2 transition-colors w-full"
+                    onClick={() => (document.getElementById("header_menu") as HTMLDialogElement).close()}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </dialog>
+          }
         </div>
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 py-2">
           <div className="flex relative w-10 h-10">
@@ -153,7 +178,7 @@ export const Header = () => {
           </div>
         </Link>
 
-        <div>
+        {/* <div>
           {playerStats?.wallet_address && (
             <Identity address={playerStats?.wallet_address as Hex}>
               <Avatar />{" "}
@@ -163,7 +188,7 @@ export const Header = () => {
               <Address />
             </Identity>
           )}
-        </div>
+        </div> */}
       </div>
       <div className="navbar-end flex-grow mr-4 px-2">
         {session ? (
