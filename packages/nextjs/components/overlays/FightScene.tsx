@@ -39,7 +39,7 @@ export const FightScene = ({ data, onDismiss }: FightSceneProps) => {
 
   return (
     <>
-      <div className="w-[95%] md:w-1/2 h-1/2 rounded-xl bg-white bg-opacity-80 backdrop-blur-md transition-all">
+      <div className="w-[95%] md:w-1/2 h-[60%] rounded-xl bg-white bg-opacity-80 backdrop-blur-md transition-all">
         <div className="flex justify-center -mt-16">
           <img src={IMAGE_URL.Not_so_chill_guy} width="124" height="124" className="rounded-xl" />
         </div>

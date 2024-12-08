@@ -58,7 +58,7 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
 
   return (
     <>
-      <div className="w-[95%] md:w-1/2 h-1/2 rounded-xl bg-white bg-opacity-80 backdrop-blur-md transition-all">
+      <div className="w-[95%] md:w-1/2 h-[60%] rounded-xl bg-white bg-opacity-80 backdrop-blur-md transition-all">
         <div className="flex justify-center -mt-16">
           <img src={IMAGE_URL.Chill_guy} width="104" height="104" className="rounded-full" />
         </div>
