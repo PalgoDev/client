@@ -38,7 +38,7 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
           width: "90%",
           height: "70vh",
           borderRadius: "10px",
-          margin: "10px 0",
+          margin: "5px 0",
 
           border: "2px solid white",
 

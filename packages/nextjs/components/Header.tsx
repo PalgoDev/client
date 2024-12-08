@@ -9,6 +9,7 @@ import { PlayerChip, PlayerStats } from "./PlayerStats";
 import { jwtDecode } from "jwt-decode";
 import { signOut, useSession } from "next-auth/react";
 import { type OktoContextType, useOkto } from "okto-sdk-react";
+import GoogleButton from "react-google-button";
 import toast from "react-hot-toast";
 import { Bars3Icon, BugAntIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { createUser } from "~~/actions/createUser";
@@ -120,7 +121,7 @@ export const Header = () => {
   };
 
   return (
-    <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-4">
+    <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-1">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
         <div className="lg:hidden dropdown" ref={burgerMenuRef}>
           <label
@@ -128,7 +129,7 @@ export const Header = () => {
             className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
             onClick={() => setIsDrawerOpen(prev => !prev)}
           >
-            <Bars3Icon className="h-1/2" />
+            <Bars3Icon className="h-3/4" />
           </label>
           {isDrawerOpen && (
             <ul className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
@@ -146,7 +147,7 @@ export const Header = () => {
           </div>
         </Link>
       </div>
-      <div className="navbar-end flex-grow mr-4 px-10">
+      <div className="navbar-end flex-grow mr-4 px-2">
         {session ? (
           playerStats ? (
             <PlayerChip
@@ -166,13 +167,15 @@ export const Header = () => {
         ) : (
           <LoginButton />
         )}
-        <PowerIcon
-          className="h-5 w-5 ml-4 cursor-pointer "
-          color="red"
-          onClick={() => {
-            handleLogout();
-          }}
-        />
+        {session && (
+          <PowerIcon
+            className="h-5 w-5 ml-4 cursor-pointer "
+            color="red"
+            onClick={() => {
+              handleLogout();
+            }}
+          />
+        )}
       </div>
     </div>
   );

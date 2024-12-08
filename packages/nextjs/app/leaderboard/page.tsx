@@ -1,36 +1,38 @@
 // pages/leaderboard.tsx
 import { FC } from "react";
+import { fetchLeaderboardRanks } from "~~/actions/getLBRanks";
 
 interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  score: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  email: string;
 }
 
-const leaderboardData: LeaderboardEntry[] = [
-  { rank: 1, name: "Jay", score: 1500 },
-  { rank: 2, name: "Alice", score: 1400 },
-  { rank: 3, name: "Bob", score: 1300 },
-  { rank: 4, name: "Charlie", score: 1200 },
-  { rank: 5, name: "Dana", score: 1100 },
-];
+const Leaderboard = async () => {
+  const ranks = await fetchLeaderboardRanks();
 
-const Leaderboard: FC = () => {
+  console.log(ranks, "raRANKSks");
+
+  const sortedRanks = ranks.sort((a: any, b: any) => b.wins - a.wins);
+
   return (
-    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-20">
+    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-16">
       <h1 className="text-primary text-2xl font-bold mb-6">Leaderboard</h1>
       <div className="w-full max-w bg-background rounded-lg shadow-sm">
         <div className="flex justify-start text-accent font-semibold border-b border-divider pb-2">
-          <span className="mr-5 min-w-[33%]">Rank</span>
-          <span className="mr-5 min-w-[33%]">Name</span>
-          <span className="mr-5 min-w-[33%]">Score</span>
+          <span className="mr-5 w-[40%]">Email</span>
+          <span className="mr-5 w-[10%]">Wins</span>
+          <span className="mr-5 w-[10%]">Losses</span>
+          <span className="mr-5 w-[10%]">Draws</span>
         </div>
         <ul>
-          {leaderboardData.map(entry => (
-            <li key={entry.rank} className="flex justify-start py-2 px-1 even:bg-accent/10">
-              <span className="mr-5 min-w-[33%]">{entry.rank}</span>
-              <span className="mr-5 min-w-[33%] truncate">{entry.name}</span>
-              <span className="mr-5 min-w-[33%]">{entry.score}</span>
+          {sortedRanks.map((entry: any) => (
+            <li key={entry.email} className="flex justify-start py-2 px-1 even:bg-accent/10">
+              <span className="mr-5 w-[40%] overflow-hidden text-ellipsis">{entry.email}</span>
+              <span className="mr-5 w-[10%]">{entry.wins}</span>
+              <span className="mr-5 w-[10%]">{entry.losses}</span>
+              <span className="mr-5 w-[10%]">{entry.draws}</span>
             </li>
           ))}
         </ul>
