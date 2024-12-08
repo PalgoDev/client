@@ -12,18 +12,19 @@ export const Fighting = () => {
 
   const fetchFight = async () => {
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/game/createAndSimulate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          player_1_id: 4,
-          player_2_id: 3,
-        }),
-      }).then(res => res.json())
-  }
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        player_1_id: 4,
+        player_2_id: 3,
+        chainId: 137,
+      }),
+    }).then(res => res.json());
+  };
 
-  const [fightData, setFightData] = useState<{damages: number[], result: number} | null>(null);
+  const [fightData, setFightData] = useState<{ damages: number[]; result: number } | null>(null);
 
   const damageList = fightData?.damages || [];
   const result = fightData?.result === 1 ? FIGHT_STEP.WIN : FIGHT_STEP.LOSE;
@@ -32,7 +33,7 @@ export const Fighting = () => {
     fetchFight().then(data => {
       setFightData(data);
     });
-  } , []);
+  }, []);
 
   useEffect(() => {
     if (!fightData) return;
