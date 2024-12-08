@@ -41,6 +41,10 @@ body {
   @apply text-foreground bg-background min-h-screen;
 }
 
+* {
+  overflow: hidden;
+}
+
 h1,
 h2,
 h3,

@@ -214,19 +214,23 @@ const MapWithGeolocation = () => {
   };
 
   const Joystick = () => {
-    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault();
+      const isTouch = e.type === "touchstart";
+      const event = isTouch ? (e as React.TouchEvent).touches[0] : (e as React.MouseEvent);
       const joystick = e.currentTarget.getBoundingClientRect();
       const centerX = joystick.left + joystick.width / 2;
       const centerY = joystick.top + joystick.height / 2;
 
-      const onMouseMove = (event: MouseEvent) => {
-        const dx = event.clientX - centerX;
-        const dy = event.clientY - centerY;
+      const handlePointerMove = (moveEvent: MouseEvent | TouchEvent) => {
+        const isTouchMove = moveEvent.type === "touchmove";
+        const pointer = isTouchMove ? (moveEvent as TouchEvent).touches[0] : (moveEvent as MouseEvent);
+        const dx = pointer.clientX - centerX;
+        const dy = pointer.clientY - centerY;
 
         const distance = Math.min(0.1, Math.sqrt(dx * dx + dy * dy));
         const angle = Math.atan2(dy, dx);
 
-        // Update joystick offset for animation
         setJoystickOffset({
           x: Math.min(40, Math.max(-40, dx)),
           y: Math.min(40, Math.max(-40, dy)),
@@ -235,16 +239,14 @@ const MapWithGeolocation = () => {
         handleJoystickMove(distance, angle);
       };
 
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-
-        // Reset joystick offset
+      const handlePointerUp = () => {
+        document.removeEventListener(isTouch ? "touchmove" : "mousemove", handlePointerMove);
+        document.removeEventListener(isTouch ? "touchend" : "mouseup", handlePointerUp);
         setJoystickOffset({ x: 0, y: 0 });
       };
 
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      document.addEventListener(isTouch ? "touchmove" : "mousemove", handlePointerMove);
+      document.addEventListener(isTouch ? "touchend" : "mouseup", handlePointerUp);
     };
 
     return (
@@ -254,14 +256,14 @@ const MapWithGeolocation = () => {
           height: "100px",
           background: "rgba(0, 0, 0, 0.1)",
           borderRadius: "50%",
-
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          zIndex: 10,
+          zIndex: 1,
           cursor: "grab",
         }}
-        onMouseDown={handleMouseDown}
+        onMouseDown={handlePointerDown}
+        onTouchStart={handlePointerDown}
       >
         <div
           style={{
@@ -271,6 +273,8 @@ const MapWithGeolocation = () => {
             borderRadius: "50%",
             transform: `translate(${joystickOffset.x}px, ${joystickOffset.y}px)`,
             transition: joystickOffset.x === 0 && joystickOffset.y === 0 ? "transform 0.2s ease" : "none",
+            overflow: "visible",
+            zIndex: 100,
           }}
         ></div>
       </div>
