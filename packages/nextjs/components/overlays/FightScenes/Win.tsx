@@ -30,7 +30,7 @@ export const Win = () => {
           alt="You"
           width="156"
           height="100%"
-          className="absolute left-0 md:left-1/4 slide-from-left z-10 rounded-full border-2 border-green-500"
+          className="absolute left-0 md:left-1/4 slide-from-left z-10 rounded-full border-4 border-green-800"
         />
         <h1 className="text-9xl italic font-bold text-center scale-down-in text-white z-20 relative">WIN</h1>
         <img
@@ -38,7 +38,7 @@ export const Win = () => {
           alt="You"
           width="156"
           height="100%"
-          className="absolute right-0 md:right-1/4 slide-from-right z-10 rounded-full border-2 border-red-500"
+          className="absolute right-0 md:right-1/4 slide-from-right z-10 rounded-full border-4 border-red-500"
         />
 
         <div className="absolute bottom-[80px]">

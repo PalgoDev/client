@@ -6,10 +6,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LoginButton } from "./GoogleSignIn";
 import { PlayerChip, PlayerStats } from "./PlayerStats";
+import { Address, Avatar, Badge, Identity, Name } from "@coinbase/onchainkit/identity";
 import { jwtDecode } from "jwt-decode";
 import { signOut, useSession } from "next-auth/react";
 import { type OktoContextType, useOkto } from "okto-sdk-react";
 import toast from "react-hot-toast";
+import { Hex } from "viem";
 import { Bars3Icon, BugAntIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { createUser } from "~~/actions/createUser";
 import { fetchUser } from "~~/actions/fetchUser";
@@ -145,6 +147,18 @@ export const Header = () => {
             <span className="text-xs">Hunt, Trade, and Play on the Go</span>
           </div>
         </Link>
+
+        <div>
+          {playerStats?.wallet_address && (
+            <Identity address={playerStats?.wallet_address as Hex}>
+              <Avatar />{" "}
+              <Name>
+                <Badge />
+              </Name>{" "}
+              <Address />
+            </Identity>
+          )}
+        </div>
       </div>
       <div className="navbar-end flex-grow mr-4 px-10">
         {session ? (

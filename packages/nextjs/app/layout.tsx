@@ -1,9 +1,10 @@
+import "@coinbase/onchainkit/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getServerSession } from "next-auth";
 import { Session } from "next-auth";
 import { Toaster } from "react-hot-toast";
+import { base } from "wagmi/chains";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import { authOptions } from "~~/config/auth";
@@ -20,12 +21,12 @@ const ScaffoldEthApp = async ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
       <body>
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
-          <ThemeProvider defaultTheme="light">
-            <ScaffoldEthAppWithProviders session={session ?? ({} as Session)}>{children}</ScaffoldEthAppWithProviders>
-            <Toaster />
-          </ThemeProvider>
-        </GoogleOAuthProvider>
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
+            <ThemeProvider defaultTheme="light">
+              <ScaffoldEthAppWithProviders session={session ?? ({} as Session)}>{children}</ScaffoldEthAppWithProviders>
+              <Toaster />
+            </ThemeProvider>
+          </GoogleOAuthProvider>
       </body>
     </html>
   );

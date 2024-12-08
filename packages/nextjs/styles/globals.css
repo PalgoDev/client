@@ -4,21 +4,36 @@
 
 :root,
 [data-theme] {
-  --background: 224 3% 87%; /* #e0e1dd */
-  --foreground: 240 10% 10%; /* #0d1b2a */
-  --primary: 240 10% 10%; /* #0d1b2a */
-  --primary-foreground: 224 3% 87%; /* #e0e1dd */
-  --secondary: 240 10% 20%; /* Slightly lighter than primary */
-  --secondary-foreground: 224 3% 87%; /* #e0e1dd */
-  --muted: 240 5% 70%; /* Muted tone */
-  --muted-foreground: 240 10% 10%; /* #0d1b2a */
-  --accent: 240 5% 60%; /* Complementary to muted */
-  --accent-foreground: 224 3% 87%; /* #e0e1dd */
-  --destructive: 0 84.2% 60.2%; /* For error states */
-  --destructive-foreground: 224 3% 87%; /* #e0e1dd */
-  --border: 240 5.9% 70%; /* For borders */
-  --input: 240 5.9% 70%; /* For inputs */
-  --ring: 240 10% 10%; /* For focus rings */
+  --background: 224 3% 87%;
+  /* #e0e1dd */
+  --foreground: 240 10% 10%;
+  /* #0d1b2a */
+  --primary: 240 10% 10%;
+  /* #0d1b2a */
+  --primary-foreground: 224 3% 87%;
+  /* #e0e1dd */
+  --secondary: 240 10% 20%;
+  /* Slightly lighter than primary */
+  --secondary-foreground: 224 3% 87%;
+  /* #e0e1dd */
+  --muted: 240 5% 70%;
+  /* Muted tone */
+  --muted-foreground: 240 10% 10%;
+  /* #0d1b2a */
+  --accent: 240 5% 60%;
+  /* Complementary to muted */
+  --accent-foreground: 224 3% 87%;
+  /* #e0e1dd */
+  --destructive: 0 84.2% 60.2%;
+  /* For error states */
+  --destructive-foreground: 224 3% 87%;
+  /* #e0e1dd */
+  --border: 240 5.9% 70%;
+  /* For borders */
+  --input: 240 5.9% 70%;
+  /* For inputs */
+  --ring: 240 10% 10%;
+  /* For focus rings */
   --radius: 0.5rem;
 }
 
@@ -54,6 +69,7 @@ p {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
