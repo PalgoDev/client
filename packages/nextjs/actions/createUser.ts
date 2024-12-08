@@ -18,6 +18,7 @@ export const createUser = async (request: CreateUserRequest) => {
         email: request.email,
         name: "chill guy",
         description: "chill guy",
+        chainId: 137,
       }),
     });
     console.log(response, "response from create user");
