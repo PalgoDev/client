@@ -193,12 +193,39 @@ export const Header = () => {
       <div className="navbar-end flex-grow mr-4 px-2">
         {session ? (
           playerStats ? (
-            <PlayerChip
-              wallet_address={playerStats.wallet_address}
-              attack={playerStats.attack}
-              defense={playerStats.defense}
-              health={playerStats.health}
-            />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => (document.getElementById("chains") as HTMLDialogElement).showModal()}
+                className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 px-4 py-2 transition-colors"
+              >
+                Switch Chain
+              </button>
+              <dialog id="chains" className="modal">
+                <div className="modal-box">
+                  <div className="flex flex-col gap-2">
+                    <ul className="list-none">
+                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">Polygon</li>
+                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">BSC</li>
+                      <li className="cursor-pointer hover:bg-gray-300 rounded-md px-2 py-1">Ethereum</li>
+                    </ul>
+                    <div className="modal-action">
+                      <button
+                        className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-red-500 px-4 py-2 transition-colors w-full"
+                        onClick={() => (document.getElementById("chains") as HTMLDialogElement).close()}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </dialog>
+              <PlayerChip
+                wallet_address={playerStats.wallet_address}
+                attack={playerStats.attack}
+                defense={playerStats.defense}
+                health={playerStats.health}
+              />
+            </div>
           ) : (
             <button
               onClick={handleCreateWallet}

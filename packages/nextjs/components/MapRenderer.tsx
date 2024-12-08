@@ -39,9 +39,7 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
           height: "65vh",
           borderRadius: "10px",
           margin: "5px 0",
-
           border: "2px solid white",
-
           position: "relative",
         }}
       >
@@ -56,7 +54,7 @@ export const MapRenderer = ({ mapRef }: MapRendererProps) => {
             userSelect: isOverlayOpen ? "none" : "auto",
 
             position: "relative",
-            zIndex: 1,
+            // zIndex: 1,
             transition: "all 0.25s ease-in-out",
           }}
         />
