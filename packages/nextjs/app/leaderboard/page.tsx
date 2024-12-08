@@ -17,7 +17,7 @@ const leaderboardData: LeaderboardEntry[] = [
 
 const Leaderboard: FC = () => {
   return (
-    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-20">
+    <div className="bg-background min-h-screen flex flex-col items-start py-6 px-16">
       <h1 className="text-primary text-2xl font-bold mb-6">Leaderboard</h1>
       <div className="w-full max-w bg-background rounded-lg shadow-sm">
         <div className="flex justify-start text-accent font-semibold border-b border-divider pb-2">
