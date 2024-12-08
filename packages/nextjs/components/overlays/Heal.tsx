@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { IMAGE_URL } from "~~/config";
 import { notification } from "~~/utils/scaffold-eth";
@@ -13,8 +14,10 @@ interface HealProps {
 }
 export const Heal = ({ data, onDismiss }: HealProps) => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClaim = useCallback(async () => {
+    setIsLoading(true);
     if (!session?.user?.email) {
       console.error("No email present in user session. Try to login again.");
       return;
@@ -35,13 +38,17 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to claim potion");
+      if (!res.ok) {
+        throw new Error("Failed to claim potion");
+      }
 
       notification.success("Claimed potion!");
       onDismiss();
     } catch (e) {
       console.error("Error while claiming potion", e);
       notification.error("Error while claiming potion");
+    } finally {
+      setIsLoading(false);
     }
   }, [session?.user?.email]);
 
@@ -60,8 +67,19 @@ export const Heal = ({ data, onDismiss }: HealProps) => {
         </div>
 
         <div className="mt-10 flex justify-center space-x-2">
-          <button className="font-bold bg-green-700 text-white px-4 py-2 rounded-xl" onClick={handleClaim}>
-            Claim a potion
+          <button
+            className="font-bold bg-green-700 text-white px-4 py-2 rounded-xl"
+            onClick={handleClaim}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="animate-spin" />
+                Claiming...
+              </div>
+            ) : (
+              "Claim a potion"
+            )}
           </button>
           <button className="font-bold bg-gray-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>
             Cancel

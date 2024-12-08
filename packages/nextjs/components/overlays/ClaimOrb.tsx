@@ -1,4 +1,5 @@
-import { useCallback } from "react";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { IMAGE_URL } from "~~/config";
 import { notification } from "~~/utils/scaffold-eth";
@@ -12,8 +13,10 @@ interface ClaimOrbProps {
 }
 export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClaim = async () => {
+    setIsLoading(true);
     if (!session?.user?.email) {
       console.error("No email present in user session. Try to login again.");
       return;
@@ -33,13 +36,19 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to claim ORB");
+      console.log("res while claiming orb", res);
+
+      if (!res.ok) {
+        throw new Error("Failed to claim ORB");
+      }
 
       notification.success("Claimed ORB!");
       onDismiss();
     } catch (e) {
       console.error("Error while claiming ORB", e);
       notification.error("Error while claiming ORB");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,8 +72,19 @@ export const ClaimOrb = ({ data, onDismiss }: ClaimOrbProps) => {
         </div>
 
         <div className="mt-10 flex justify-center space-x-2">
-          <button className="font-bold bg-purple-700 text-white px-4 py-2 rounded-xl" onClick={handleClaim}>
-            Claim
+          <button
+            className="font-bold bg-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2"
+            onClick={handleClaim}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Claiming...
+              </>
+            ) : (
+              "Claim"
+            )}
           </button>
           <button className="font-bold bg-gray-700 text-white px-4 py-2 rounded-xl" onClick={onDismiss}>
             Cancel

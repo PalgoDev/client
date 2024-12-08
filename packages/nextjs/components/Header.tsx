@@ -122,6 +122,10 @@ export const Header = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("session changed", session);
+  }, [session]);
+
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-1">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
