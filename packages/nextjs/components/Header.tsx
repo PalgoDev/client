@@ -132,6 +132,14 @@ export const Header = () => {
     console.log("session changed", session);
   }, [session]);
 
+  useEffect(() => {
+    if (session) {
+      handleFetchUserDb();
+    } else {
+      setUserAddress(null);
+    }
+  }, []);
+
   return (
     <div className="sticky lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 py-2 shadow-secondary px-1">
       <div className="navbar-start w-auto lg:w-1/2 px-10">
@@ -204,7 +212,7 @@ export const Header = () => {
                 onClick={() => (document.getElementById("chains") as HTMLDialogElement).showModal()}
                 className="bg-transparent hover:bg-gray-300 text-black border rounded-md border-gray-300 px-4 py-2 transition-colors"
               >
-                {chainNameById[chainId as any] || "Switch Chain"}
+                {chainNameById[chainId as keyof typeof chainNameById] || "Switch Chain"}
               </button>
               <dialog id="chains" className="modal">
                 <div className="modal-box">
