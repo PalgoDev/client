@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Session } from "next-auth";
@@ -15,6 +16,7 @@ import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
+import { base } from "wagmi/chains";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -56,23 +58,25 @@ export const ScaffoldEthAppWithProviders = ({ children, session }: { children: R
 
   return (
     <SessionProvider session={session}>
-      <OktoProvider
-        apiKey={process.env.NEXT_PUBLIC_OKTO_CLIENT_API!}
-        buildType={BuildType.SANDBOX}
-        gAuthCb={handleGAuthCb}
-      >
-        <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            <ProgressBar height="3px" color="#2299dd" />
-            <RainbowKitProvider
-              avatar={BlockieAvatar}
-              theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
-            >
-              <ScaffoldEthApp>{children}</ScaffoldEthApp>
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
-      </OktoProvider>
+      <OnchainKitProvider apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY as string} chain={base as any}>
+        <OktoProvider
+          apiKey={process.env.NEXT_PUBLIC_OKTO_CLIENT_API!}
+          buildType={BuildType.SANDBOX}
+          gAuthCb={handleGAuthCb}
+        >
+          <WagmiProvider config={wagmiConfig}>
+            <QueryClientProvider client={queryClient}>
+              <ProgressBar height="3px" color="#2299dd" />
+              <RainbowKitProvider
+                avatar={BlockieAvatar}
+                theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
+              >
+                <ScaffoldEthApp>{children}</ScaffoldEthApp>
+              </RainbowKitProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </OktoProvider>
+      </OnchainKitProvider>
     </SessionProvider>
   );
 };

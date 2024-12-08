@@ -1,5 +1,7 @@
 import React from "react";
 import { StoreModal } from "./StoreModal";
+import { Address, Avatar, Badge, Identity, Name } from "@coinbase/onchainkit/identity";
+import { Hex } from "viem";
 
 export type PlayerStats = {
   wallet_address: string;
@@ -13,6 +15,7 @@ export const PlayerChip: React.FC<PlayerStats> = ({ wallet_address, attack, defe
 
   return (
     <>
+     
       {/* Player Chip */}
       <div
         className="flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-md shadow-NONE flex-row-reverse cursor-pointer"
